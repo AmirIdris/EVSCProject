@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
-from .models import TrafficPolice,SystemAdmin,Records
+from .models import TrafficPolice,SystemAdmin,Records,Notification,Report
 from django.dispatch import receiver
 
 
@@ -23,9 +23,6 @@ def send_notification(sender,instance,created,**kwargs):
     print("created :", created)
 
     if created:
-
-        
-
 
         traffic_police_location_list = []
         all_traffic_police = TrafficPolice.objects.all()
@@ -79,4 +76,8 @@ def send_notification(sender,instance,created,**kwargs):
         result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
         
         print(result)
-
+@receiver(post_save,sender = Report)
+def notificatio(post_save, instance, created, **kwargs):
+    if created:
+        Notification.objects.create()
+        

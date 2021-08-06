@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import path,include
 
 urlpatterns = [
-    path('',include(arg)),
+    # path('',include(arg)),
     path('admin/', admin.site.urls),
-    path('sites/',include("EVSCapp.urls")),
-    path('sites/api/',include("EVSCapp.EVSCApi.urls"))
+    # path('sites/',include("EVSCapp.urls")),
+    path('',include('pages.urls')),
+    path('sites/api/',include("EVSCapp.EVSCApi.urls")),
+    path('',include('authentication.urls'))
 ]

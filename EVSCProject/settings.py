@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_auth',
     'corsheaders',
     'EVSCapp',
-    'authentication'
+    'authentication',
+    'pages'
 ]
 
 MIDDLEWARE = [
