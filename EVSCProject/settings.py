@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_auth',
     'corsheaders',
-    'EVSCapp'
+    'EVSCapp',
+    'authentication'
 ]
 
 MIDDLEWARE = [
