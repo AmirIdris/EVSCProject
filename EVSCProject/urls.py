@@ -20,7 +20,7 @@ urlpatterns = [
     # path('',include(arg)),
     path('admin/', admin.site.urls),
     # path('sites/',include("EVSCapp.urls")),
-    path('',include('pages.urls')),
     path('sites/api/',include("EVSCapp.EVSCApi.urls")),
-    path('',include('authentication.urls'))
+    path("",include('authentication.urls')),
+    path("",include('pages.urls')),
 ]

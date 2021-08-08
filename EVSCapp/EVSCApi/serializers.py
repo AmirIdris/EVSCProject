@@ -114,11 +114,11 @@ class UserSerializer(serializers.Serializer):
 
 
 class RecordSerializer(serializers.ModelSerializer):
-    records=serializers.SerializerMethodField(read_only=False)
+    # records=serializers.SerializerMethodField(read_only=False)
     created_at=serializers.SerializerMethodField()
     class Meta:
         model=Records
-        fields="__all__"
+        exclude = ('status',)
     def get_created_at(self,instance):
         return instance.created_at.strftime("%B %d %Y")
 

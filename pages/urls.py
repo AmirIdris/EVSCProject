@@ -4,7 +4,6 @@ from pages.views import (index,
                         SignUpPageView,
                         pages,
                         manage_vehicle,
-                        view_records,
                         manage_traffic_police,
                         manage_system_admin,
                         add_vehicle,
@@ -14,7 +13,12 @@ from pages.views import (index,
                         delete_vehicle,
                         admin_profile,
                         admin_profile_update,
-                        add_traffic_police
+                        add_traffic_police,
+                        add_user,
+                        add_user_save,
+                        detail_info_view,
+                        records_view
+
                         )
 
 urlpatterns = [
@@ -27,12 +31,15 @@ urlpatterns = [
     path('edit_vehicle/<vehicle_id>',edit_vehicle, name = 'edit_vehicle'),
     path('edit_vehicle_save/', edit_vehicle_save, name = 'edit_vehicle_save'),
     path('delete_vehicle/<vehicle_id>', delete_vehicle, name = 'delete_vehicle'),
-    path('view_records/',view_records, name ='view_records'),
     path('manage_traffic_police/',manage_traffic_police, name = 'manage_traffic_police'),
     path('manage_system_admin/',manage_system_admin, name = 'manage_system_admin'),
     path('admin_profile', admin_profile, name = 'admin_profile'),
     path('admin_profile_update', admin_profile_update, name = 'admin_profile_update'),
     path('add_traffic_police', add_traffic_police, name = 'add_traffic_police'),
+    path('add_user/',add_user, name = 'add_user'),
+    path('add_user_save', add_user_save, name = 'add_user_save'),
+    path('more_traffic_info/<traffic_id>/', detail_info_view, name = 'detail_info'),
+    path('view_records/',records_view, name = 'view_records'),
     re_path(r'^.*\.*', pages, name='pages'),
 
     

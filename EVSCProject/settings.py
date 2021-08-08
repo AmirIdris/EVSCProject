@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-6rzt-4+4i(@ch!)j@$o+9l@%g2jf45vdt_*@4^#(a+fg5h5ra$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '*'
+]
 
 
 # Application definition
@@ -49,6 +51,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -171,3 +174,5 @@ REST_FRAMEWORK = {
 REST_AUTH_SERIALIZERS={
     'TOKEN_SERIALIZER':'EVSCapp.EVSCApi.serializers.CustomTokenSerializer'
 }
+LOGIN_REDIRECT_URL='home'
+LOGOUT_REDIRECT_URL = 'login'

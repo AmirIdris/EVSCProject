@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.template import loader
 from .forms import CustomUserCreationForm
 from EVSCapp.models import Vehicle,Records,Report,TrafficPolice,SystemAdmin
+from django.views.decorators.csrf import csrf_protect,requires_csrf_token
 
 from pages.forms import AddTrafficPoliceForm
 # Create your views here.
@@ -105,7 +106,7 @@ def manage_vehicle(request):
             "vehicles":vehicles
             }
 
-    return render(request, "manage_vehicle.html",context)
+    return render(request, "manage_vehicle_template.html",context)
 
 
 def edit_vehicle(request, vehicle_id):
@@ -154,53 +155,89 @@ def delete_vehicle(request,vehicle_id):
         messages.error(request, "unavle to delete vehicle")
 
         return redirect('manage_vehicle')
-
+@requires_csrf_token
 def add_user(request):
-    form = AddUserForm()
-    context = {
-        "form":form
-    }
-    return render(request, template_name,context)
-
+    # form = AddUserForm()
+    # context = {
+    #     "form":form
+    # }
+    return render(request, "user_registration_template.html")
+@requires_csrf_token
 def add_user_save(request):
     if request.method != "POST":
         messages.error(request, "Invalid method")
 
     else:
-        form = AddUserForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        usernam = request.POST.get('username')
+        is_traffic = request.POST.get('membershipRadios')
 
-            try:
-                user = User.objects.create(email=email,password=password,username=username,first_name=first_name,last_name=last_name)
-                user.save()
-                messages.success(request, "student added successfully!")
-                return redirect("to")
+        
+        password = User.objects.make_random_password()
+        if is_traffic == "1":               
+            user = User.objects.create(first_name = first_name, last_name = last_name, email = email, username =  usernam, is_staff = False)
+            
+            user.set_password(password)
+            user.save()
 
-            except:
-                messages.error(request, "Failed to add student")
-                return redirect("to")
+            traffic = TrafficPolice.objects.get(user = user.id)
+            traffic_id = traffic.id
+            print(traffic_id)
+            return redirect('detail_info', traffic_id = traffic_id)
+            
+        elif is_traffic == "2":
+            user = User.objects.create(first_name = first_name, last_name = last_name, email = email, username = usernam, is_staff = True)
+            user.set_password(password)
+            user.save()
 
-        else:
-            return redirect("to")
+            return redirect('admin')
+                         
+                    
+                
+
+            # if user.is_staff == True:
+            #     return redirect('admin')
+
+        # except:
+        #     messages.error(request, "Failed to add user")
+        return render(request, 'user_registration_template.html')
 
 
-        return redirect("to")
+        # form = AddUserForm(request.POST)
+        # if form.is_valid():
+        #     email = form.cleaned_data['email']
+        #     password = form.cleaned_data['password']
+        #     username = form.cleaned_data['username']
+        #     password = form.cleaned_data['password']
+        #     first_name = form.cleaned_data['first_name']
+        #     last_name = form.cleaned_data['last_name']
+
+        #     try:
+        #         user = User.objects.create(email=email,password=password,username=username,first_name=first_name,last_name=last_name)
+        #         user.save()
+        #         messages.success(request, "student added successfully!")
+        #         return redirect("to")
+
+        #     except:
+        #         messages.error(request, "Failed to add student")
+        #         return redirect("to")
+
+        # else:
+        #     return redirect("to")
 
 
+        # return redirect("to")
+def detail_info_view(request,traffic_id):
+    traffic = TrafficPolice.objects.get(id = traffic_id)
+    context = {
+        'traffic' : traffic
+    }
 
-def view_records(request):
-    records=Records.objects.all()
-    context={
-            "records":records
-            }
+    return render(request,"traffic_info_template.html", context)
 
-    return render(request, "view_records.html",context)
+
 
 
 def manage_traffic_police(request):
@@ -209,17 +246,17 @@ def manage_traffic_police(request):
         "traffic_polices" : traffic_police
     }
 
-    return render(request, "manage_traffic_police.html",context)
+    return render(request, "manage_traffic_template.html",context)
 
 
 
 def manage_system_admin(request):
     admins = SystemAdmin.objects.all()
     context = {
-        "admins" : traffic_police
+        "admins" : admins
     }
 
-    return render(request, "manage_system_admin.html",context)
+    return render(request, "admin_view_template.html",context)
 
 
 def admin_profile(request):
@@ -297,7 +334,12 @@ def add_traffic_police_save(request):
 
             except:
                 messages.error(request, "Failed to save")
-
+def records_view(request):
+    records=Records.objects.all()
+    context = {
+        'records':records
+    }
+    return render(request, "view_records_template.html", context)
 
                 
 

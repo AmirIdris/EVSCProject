@@ -73,11 +73,13 @@ class TrafficPoliceLocation(models.Model):
 
 class TrafficPolice(models.Model):
     """Model definition for TrafficPolice."""
+    gender_choices=(('M','Male'),('F','Female'))
     user=models.OneToOneField(User,on_delete=models.CASCADE,related_name='traffic_police')
     location = models.OneToOneField(TrafficPoliceLocation, on_delete=models.CASCADE, related_name='traffic_location',null=True)
     fcm_token=models.TextField(null=True)
     phone_number=models.CharField(max_length=100)
     status=models.BooleanField("Active",default=True)
+    gender = models.CharField(max_length = 1, choices = gender_choices ,default='M')
     
 
 
