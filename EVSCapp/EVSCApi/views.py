@@ -14,6 +14,7 @@ from EVSCapp.EVSCApi.serializers import (VehicleSerializer,
 
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
+from rest_framework.decorators import api_view
 
 from django.views.decorators.csrf import csrf_exempt, csrf_protect,ensure_csrf_cookie
 from django.utils.decorators import method_decorator
@@ -32,14 +33,23 @@ class ListRecordAPiView(viewsets.ModelViewSet):
 class ListReport(generics.ListAPIView):
     queryset= Report.objects.all()
     serializer_class=ReportSerializer
+# List all available records
+# class RecordList(APIView):
+#     # queryset = Records.objects.all()
+#     # serializer_class = RecordSerializer
 
-class RecordList(APIView):
-    """ List All Available records """
-    def get(self,request):
-        records=Records.objects.all()
-        serializer=RecordSerializer(records,many=True)
+#     def get(self,request, format = None):
+#         records = Records.objects.all()
+#         serializer = RecordSerializer(records, many = True)
+#         return Response(serializer.data)
 
+@api_view(['GET','POST'])
+def list_records(request):
+    if request.method == 'GET':
+        records = Records.objects.all()
+        serializer = RecordSerializer(records, many = True)
         return Response(serializer.data)
+
 
 
 

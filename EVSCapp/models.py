@@ -67,17 +67,19 @@ class TrafficPoliceLocation(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
 
     def __str__(self):
-        return self.name
+        return self.location_name
 
 
 
 class TrafficPolice(models.Model):
     """Model definition for TrafficPolice."""
+    gender_choices=(('M','Male'),('F','Female'))
     user=models.OneToOneField(User,on_delete=models.CASCADE,related_name='traffic_police')
     location = models.OneToOneField(TrafficPoliceLocation, on_delete=models.CASCADE, related_name='traffic_location',null=True)
     fcm_token=models.TextField(null=True)
     phone_number=models.CharField(max_length=100)
     status=models.BooleanField("Active",default=True)
+    gender = models.CharField(max_length = 1, choices = gender_choices ,default='M')
     
 
 

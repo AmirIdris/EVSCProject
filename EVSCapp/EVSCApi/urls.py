@@ -12,7 +12,10 @@ from EVSCapp.EVSCApi.views import (RecordDetailAPIView,
                                     MyProfileLoadAPIView,
                                     ListUser,
                                     ListUserDetail,
-                                    RecordViewSet
+                                    RecordViewSet,
+                                    # RecordList,
+                                    list_records
+
                                    
                                     )
 
@@ -28,8 +31,8 @@ router.register("records",qv.RecordViewSet)
 urlpatterns = [
     # path("",include(router.urls)),
     path("",include(router.urls)),
-    
-    # path('records/',RecordViewSet.as_view(),name='list-rcords'),
+    path('rest-auth/',include("rest_auth.urls")),
+    path('records/',list_records,name='list-rcords'),
     path('records/<int:pk>/',RecordDetailAPIView.as_view(),name='list-detail'),
     path("records/<int:pk>/report/", qv.ReportCreateAPiView.as_view(),name='create-report'),
     path('vehicles/',LisVehicle.as_view(),name='list-vehicle'),
