@@ -13,7 +13,7 @@ from .forms import CustomUserCreationForm
 from EVSCapp.models import Vehicle,Records,Report,TrafficPolice,SystemAdmin,TrafficPoliceLocation
 from django.views.decorators.csrf import csrf_protect,requires_csrf_token
 
-from pages.forms import AddTrafficPoliceForm
+# from pages.forms import AddTrafficPoliceForm
 from django.views.generic import ListView
 
 from django.db.models import Q
@@ -352,33 +352,30 @@ def edit_traffic_police_save(request):
             user.email = email
             if status == "1":
                 user.is_active = True
-
             else:
                 user.is_active = False
 
-            
+
             user.save()
             print(id)
             traffic_police = TrafficPolice.objects.get(pk = id)
             print(traffic_police)
-            
+
             traffic_police.phone_number = phone_number
             print(traffic_police.phone_number)
             traffic_police.gender = gender
             traffic_police_sites = TrafficPoliceLocation.objects.get(id = traffic_police_location)
-            
 
+            print(traffic_police_sites)
             traffic_police.location = traffic_police_sites
-            print(traffic_police.location)
-            traffic_police.save()
-
+            # print(traffic_police.location)
+            traffic_police.save(update_fields=['phone_number','gender','location'])
             messages.success(request, "Profile Updated successfully")
             # return redirect("edit_traffic_police", traffic_police_id = id )
             return redirect("manage_traffic_police")
 
         except:
             messages.error(request, "Failed to update Profile")
-            print(error)
             return redirect("edit_traffic_police", traffic_police_id = id )
 
 
