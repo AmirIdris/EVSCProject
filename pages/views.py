@@ -18,6 +18,7 @@ from django.views.generic import ListView
 
 from django.db.models import Q
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
+from django.contrib.auth.decorators import user_passes_test
 # Create your views here.
 
 # HomePage View 
@@ -176,6 +177,7 @@ def add_user(request):
     # }
     return render(request, "user_registration_template.html")
 @requires_csrf_token
+@user_passes_test(lambda u: u.is_superuser)
 def add_user_save(request):
     if request.method != "POST":
         messages.error(request, "Invalid method")
@@ -205,7 +207,7 @@ def add_user_save(request):
             user.set_password(password)
             user.save()
 
-            return redirect('admin')
+            return redirect('manage_system_admins')
                          
                     
                 
@@ -473,6 +475,35 @@ def search_all_traffic_police(request):
             return render(request, "manage_traffic_template.html",context = {})
 
         
+#search records by vehicle plate 
+
+def search_all_vehicle_records(request):
+    if request.method == 'GET':
+        plate = request.GET.get('search')
+        records = Records.objects.filter(Q(vehicle__vehicle_plate__iexact = plate))
+        if records.exists():
+            context = {
+                'records' : records 
+            }
+            return render(request, "view_records_template.html",context)
+
+        else:
+            return render(request, "view_records_template.html",context = {})
+
+
+# search all available vehicle in the system
+def search_all_vehicle(request):
+    if request.method == 'GET':
+        plate = request.GET.get('search')
+        vehicle = Vehicle.objects.filter(Q(vehicle_plate__iexact = plate))
+        if vehicle.exists():
+            context = {
+                'vehicles' : vehicle 
+            }
+            return render(request, "manage_vehicle_template.html",context)
+
+        else:
+            return render(request, "manage_vehicle_template.html",context = {})
 
 
 
