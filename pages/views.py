@@ -10,10 +10,14 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from .forms import CustomUserCreationForm
-from EVSCapp.models import Vehicle,Records,Report,TrafficPolice,SystemAdmin
+from EVSCapp.models import Vehicle,Records,Report,TrafficPolice,SystemAdmin,TrafficPoliceLocation
 from django.views.decorators.csrf import csrf_protect,requires_csrf_token
 
 from pages.forms import AddTrafficPoliceForm
+from django.views.generic import ListView
+
+from django.db.models import Q
+from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 # Create your views here.
 
 # HomePage View 
@@ -73,7 +77,16 @@ class SignUpPageView(generic.CreateView):
     form_class=CustomUserCreationForm
     success_url=reverse_lazy('login')
     template_name='accounts/register.html'
+class SearchResultsView(ListView):
+    model = TrafficPolice
+    template_name = 'manage_traffic_template.html'
+    
 
+    def get_queryset(self):
+        query = self.request.GET.get('search')
+        return TrafficPolice.objects.filter(
+            Q(user__username__icontains = query) | Q(user__email__icontains = query)
+        )
 
 
 def add_vehicle(request):
@@ -242,11 +255,150 @@ def detail_info_view(request,traffic_id):
 
 def manage_traffic_police(request):
     traffic_police = TrafficPolice.objects.all()
+
+    page = request.GET.get('page',1)
+    paginator = Paginator(traffic_police, 10)
+    try:
+        traffic_police = paginator.page(page)
+    except PageNotAnInteger:
+        traffic_police = paginator.page(1)
+    except EmptyPage:
+        traffic_police = paginator.page(paginator.num_pages)
+
+
     context = {
         "traffic_polices" : traffic_police
     }
 
     return render(request, "manage_traffic_template.html",context)
+
+def add_traffic_police(request):
+    form = AddTrafficPoliceForm()
+
+    context = {
+        'form' : form
+    }
+
+    return render(request, "add_traffic_police.html", context)
+
+def add_traffic_police_save(request):
+    if request.method !='POST':
+        messages.error(request, "Invalid Method")
+        return redirect('add_traffic_police')
+
+    else:
+        form = AddTrafficPoliceForm(request.POST)
+
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            phone_number = form.cleaned_data['phone_number']
+
+            location = form.cleaned_data['location']
+
+
+            try:
+                user = User.objects.create(email = email, first_name = first_name, last_name = last_name, username = userrname, password = password)
+
+                user.save()
+
+            except:
+                messages.error(request, "Failed to save")
+
+def edit_traffic_police(request,traffic_police_id):
+    traffic_police = TrafficPolice.objects.get(id = traffic_police_id)
+
+    traffic_police_location = TrafficPoliceLocation.objects.all()
+    
+
+    context ={
+        'traffic_police':traffic_police,
+        'id':traffic_police_id,
+        'traffic_police_locations': traffic_police_location
+    }
+
+    return render(request, "edit_traffic_police_template.html", context)
+
+
+
+
+def edit_traffic_police_save(request):
+    if request.method != 'POST':
+        messages.error(request, "Invalid Method")
+        return redirect("manage_traffic_police")
+        
+    else:
+        id = request.POST.get('traffic_police_id')
+        
+        username = request.POST.get('username')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        status = request.POST.get('membershipRadios')
+        phone_number = request.POST.get('phone_number')
+        gender = request.POST.get('gender')
+        traffic_police_location = request.POST.get('traffic_police_location')
+
+        try:
+            user = User.objects.get(traffic_police = id)
+            print(user)
+            user.username = username
+            user.first_name = first_name
+            print(user.first_name)
+            user.last_name = last_name
+            user.email = email
+            if status == "1":
+                user.is_active = True
+
+            else:
+                user.is_active = False
+
+            
+            user.save()
+            print(id)
+            traffic_police = TrafficPolice.objects.get(pk = id)
+            print(traffic_police)
+            
+            traffic_police.phone_number = phone_number
+            print(traffic_police.phone_number)
+            traffic_police.gender = gender
+            traffic_police_sites = TrafficPoliceLocation.objects.get(id = traffic_police_location)
+            
+
+            traffic_police.location = traffic_police_sites
+            print(traffic_police.location)
+            traffic_police.save()
+
+            messages.success(request, "Profile Updated successfully")
+            # return redirect("edit_traffic_police", traffic_police_id = id )
+            return redirect("manage_traffic_police")
+
+        except:
+            messages.error(request, "Failed to update Profile")
+            print(error)
+            return redirect("edit_traffic_police", traffic_police_id = id )
+
+
+
+
+
+
+def delete_traffic_police(request, traffic_police_id):
+    traffic_police = TrafficPolice.objects.get(id = traffic_police_id)
+
+    try:
+        traffic_police.delete()
+        messages.success(request, "successfully deleted")
+        return redirect('manage_traffic_police')
+
+    except:
+        messages.error(request, "unable to delete traffic police")
+        return redirect('manage_traffic_police')
+
+    
 
 
 
@@ -298,42 +450,9 @@ def admin_profile_update(request):
             messages.error(request, "Failed to update Profile")
             return redirect("admin_profile")
 
-def add_traffic_police(request):
-    form = AddTrafficPoliceForm()
-
-    context = {
-        'form' : form
-    }
-
-    return render(request, "add_traffic_police.html", context)
 
 
-def add_traffic_police_save(request):
-    if request.method !='POST':
-        messages.error(request, "Invalid Method")
-        return redirect('add_traffic_police')
 
-    else:
-        form = AddTrafficPoliceForm(request.POST)
-
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            phone_number = form.cleaned_data['phone_number']
-
-            location = form.cleaned_data['location']
-
-
-            try:
-                user = User.objects.create(email = email, first_name = first_name, last_name = last_name, username = userrname, password = password)
-
-                user.save()
-
-            except:
-                messages.error(request, "Failed to save")
 def records_view(request):
     records=Records.objects.all()
     context = {
@@ -341,7 +460,23 @@ def records_view(request):
     }
     return render(request, "view_records_template.html", context)
 
-                
+
+# search all traffic police
+def search_all_traffic_police(request):
+    if request.method == 'GET':
+        username = request.GET.get('search')
+        traffic = TrafficPolice.objects.filter(Q(user__username__iexact = username)|Q(user__email__iexact = username))
+        if traffic.exists():
+            context = {
+                'traffic_polices' : traffic 
+            }
+            return render(request, "manage_traffic_template.html",context)
+
+        else:
+            return render(request, "manage_traffic_template.html",context = {})
+
+        
+
 
 
 

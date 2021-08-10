@@ -1,0 +1,118 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Basic Elements {% endblock %} 
+
+<!-- Specific Plugin CSS goes HERE -->
+{% block plugin_stylesheets %}
+
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="/static/assets/vendors/select2/select2.min.css">
+  <link rel="stylesheet" href="/static/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+  <!-- End plugin css for this page -->
+
+{% endblock plugin_stylesheets %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Basic form elements</h4>
+        <p class="card-description"> Basic form elements </p>
+        <form method="POST" class="forms-sample" action=" {% url 'edit_traffic_police_save' %}  ">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="exampleInputName1">First Name</label>
+            <input type="text" class="form-control" id="exampleInputName1" name="first_name" placeholder="Name" value="{{traffic_police.user.first_name}}">
+            <input type="hidden" name="traffic_police_id" value="{{traffic_police.id}}">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputName1">Last Name</label>
+            <input type="text" class="form-control" id="exampleInputName1" name="last_name" placeholder="Name" value="{{traffic_police.user.last_name}}">
+          </div>
+
+          <div class="form-group">
+            <label for="exampleInputEmail3">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail3" name="email" placeholder="Email" value="{{traffic_police.user.email}}">
+          </div>
+
+          <div class="form-group">
+            <label for="exampleInputEmail3">Username</label>
+            <input type="text" class="form-control" id="exampleInputEmail3" placeholder="Username" name="username" value="{{traffic_police.user.username}}">
+          </div>
+          <div class="form-group">
+            <label for="exampleSelectGender">Gender</label>
+            <select class="form-control" name="gender" id="exampleSelectGender">
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputCity1">Phone Number</label>
+            <input type="text" class="form-control" id="exampleInputCity1" name="phone_number" placeholder="Phone Number" value="{{traffic_police.phone_number}}">
+          </div>
+
+          <div class="form-group">
+            <label>Assign Location to the Traffic Police</label>
+
+            <select name="traffic_police_location" class="js-example-basic-single" style="width:100%">
+              {% for traffic_police_location in traffic_police_locations %}
+              <option  value="{{traffic_police_location.id}}" 
+              {% if traffic_police.location.id == traffic_police_location.id %}
+                selected
+              {% endif %}
+              >
+              {{traffic_police_location.location_name}}</option>
+              {% endfor %}
+
+            </select>
+ 
+           
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Status</label>
+            <div class="col-sm-4">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios1" value="1" checked> Activate </label>
+              </div>
+            </div>
+            <div class="col-sm-5">
+              <div class="form-check form-check-danger">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios2" value="2"> Deactivate </label>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary mb-2">Submit</button>
+
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% endblock content %}
+
+<!-- Specific Plugin JS goes HERE  -->
+{% block plugin_javascripts %}
+
+  <script src="/static/assets/vendors/select2/select2.min.js"></script>
+  <script src="/static/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+
+{% endblock plugin_javascripts %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script src="/static/assets/js/file-upload.js"></script>
+  <script src="/static/assets/js/typeahead.js"></script>
+  <script src="/static/assets/js/select2.js"></script>
+
+{% endblock javascripts %}
