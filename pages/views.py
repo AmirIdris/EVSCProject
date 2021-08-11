@@ -314,12 +314,22 @@ def edit_traffic_police(request,traffic_police_id):
     traffic_police = TrafficPolice.objects.get(id = traffic_police_id)
 
     traffic_police_location = TrafficPoliceLocation.objects.all()
+
+    location_found = []
+    location_not_found = []
+
+    for traffic in traffic_police_location:
+
+        if TrafficPolice.objects.filter(location = traffic.pk).exists():
+            location_found.append(traffic)
+        else:
+            location_not_found.append(traffic)
     
 
     context ={
         'traffic_police':traffic_police,
         'id':traffic_police_id,
-        'traffic_police_locations': traffic_police_location
+        'traffic_police_locations': location_not_found
     }
 
     return render(request, "edit_traffic_police_template.html", context)
