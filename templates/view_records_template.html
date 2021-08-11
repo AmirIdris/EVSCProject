@@ -48,14 +48,15 @@
                   <h4 class="card-title ">Simple Table</h4>
                   <p class="card-category"> Here is a subtitle for this table</p>
                 </div>
-                <div class="form-group" style="width: 50%;">
+                <form method="GET" class="form-group" style="width: 50%;" action="{% url 'search_vehicle_record' %} ">
+                  
                   <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search's record by vehicle plate" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    <input type="text" name="search" class="form-control" placeholder="Search's record by vehicle plate" aria-label="Recipient's username" aria-describedby="basic-addon2">
                     <div class="input-group-append">
-                      <button class="btn btn-sm btn-primary" type="button">Search</button>
+                      <button class="btn btn-sm btn-primary" type="submit">Search</button>
                     </div>
                   </div>
-                </div>
+                </form>
 
                 <div class="card-body">
                   <div class="table-responsive">
@@ -69,6 +70,7 @@
                             <th>Address</th>
                             <th>Vehicle Speed</th>
                             <th>Status</th>
+                            <th>Map View</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -85,10 +87,16 @@
                            
                             
                             {% if record.status == False  %}
-                            <label class="badge badge-danger">Pending</label></td>
+                            <label class="badge badge-danger">Pending</label>
                             {% else %}
                             <label class="badge badge-success">Approved</label>
                             {% endif %}
+
+                          </td>
+                          <td>
+                            <a href="{% url 'view_record_on_map' record.id %}" class="text-danger"><i class="mdi mdi-arrow-right"></i>View</a>                          
+                          </td>
+                          
                               
 
                         </tr>

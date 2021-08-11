@@ -22,7 +22,10 @@ from pages.views import (index,
                         SearchResultsView,
                         edit_traffic_police,
                         delete_traffic_police,
-                        edit_traffic_police_save
+                        edit_traffic_police_save,
+                        search_all_vehicle_records,
+                        search_all_vehicle,
+                        view_record_location_on_map
 
                         )
 
@@ -38,6 +41,9 @@ urlpatterns = [
     path('edit_vehicle/<vehicle_id>',edit_vehicle, name = 'edit_vehicle'),
     path('edit_vehicle_save/', edit_vehicle_save, name = 'edit_vehicle_save'),
     path('delete_vehicle/<vehicle_id>', delete_vehicle, name = 'delete_vehicle'),
+    path('search_vehicle_record',search_all_vehicle_records, name = 'search_vehicle_record'),
+    path('search_vehicle',search_all_vehicle, name = 'search_vehicle'),
+
     # traffic related urls
     path('manage_traffic_police/',manage_traffic_police, name = 'manage_traffic_police'),
     path('add_traffic_police', add_traffic_police, name = 'add_traffic_police'),
@@ -57,6 +63,7 @@ urlpatterns = [
     
     #record related urls
     path('view_records/',records_view, name = 'view_records'),
+    path('view_record_on_map/<location_id>',view_record_location_on_map, name = 'view_record_on_map'),
 
     # pages urls
     re_path(r'^.*\.*', pages, name='pages'),
