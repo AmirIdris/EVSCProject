@@ -19,6 +19,8 @@ from django.views.generic import ListView
 from django.db.models import Q
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from django.contrib.auth.decorators import user_passes_test
+
+import folium
 # Create your views here.
 
 # HomePage View 
@@ -514,6 +516,50 @@ def search_all_vehicle(request):
 
         else:
             return render(request, "manage_vehicle_template.html",context = {})
+
+
+def view_record_location_on_map(request, location_id):
+
+    record = Records.objects.get(id = location_id)
+    traffic_police_location = TrafficPoliceLocation.objects.all()
+    latitude = record.latitude
+    longitude = record.longitude
+
+    map = folium.Map(location = [float(latitude), float(longitude)],zoom_start = 13)
+    folium.Marker(location = [float(latitude),float(longitude)],
+    tooltip = 'click for more',
+    popup='Vehicle Plate is:'+ str(record.vehicle.vehicle_plate),
+    icon = folium.Icon(color = 'red', icon = 'info-sign')
+    ).add_to(map)
+
+    for traffic_police_location in traffic_police_location:
+        latitude = traffic_police_location.latitude
+        longitude = traffic_police_location.longitude
+        # traffic = TrafficPolice.objects.get(location = traffic_police_location.id)
+        # print(traffic)
+        folium.Marker(location = [float(latitude),float(longitude)],
+        tooltip = 'click for more',
+        popup='Traffic Name is:' + traffic_police_location.location_name,
+        icon = folium.Icon(color = 'blue', icon = 'info-sign')
+        ).add_to(map)
+
+    folium.raster_layers.TileLayer('Stamen Terrain').add_to(map)
+    folium.raster_layers.TileLayer('Stamen Toner').add_to(map)
+    folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)
+    folium.raster_layers.TileLayer('CartoDB Positron').add_to(map)
+    folium.raster_layers.TileLayer('CartoDB Dark_Matter').add_to(map)
+
+
+    folium.LayerControl().add_to(map)
+
+    map = map._repr_html_()
+
+    context = {
+        'map':map
+    }
+
+    return render(request, "view_record_on_map_template.html",context)
+
 
 
 

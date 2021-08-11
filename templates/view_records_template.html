@@ -70,6 +70,7 @@
                             <th>Address</th>
                             <th>Vehicle Speed</th>
                             <th>Status</th>
+                            <th>Map View</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -86,10 +87,16 @@
                            
                             
                             {% if record.status == False  %}
-                            <label class="badge badge-danger">Pending</label></td>
+                            <label class="badge badge-danger">Pending</label>
                             {% else %}
                             <label class="badge badge-success">Approved</label>
                             {% endif %}
+
+                          </td>
+                          <td>
+                            <a href="{% url 'view_record_on_map' record.id %}" class="text-danger"><i class="mdi mdi-arrow-right"></i>View</a>                          
+                          </td>
+                          
                               
 
                         </tr>
