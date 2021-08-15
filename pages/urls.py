@@ -25,7 +25,8 @@ from pages.views import (index,
                         edit_traffic_police_save,
                         search_all_vehicle_records,
                         search_all_vehicle,
-                        view_record_location_on_map
+                        view_record_location_on_map,
+                        detail_info_view_save
 
                         )
 
@@ -48,6 +49,7 @@ urlpatterns = [
     path('manage_traffic_police/',manage_traffic_police, name = 'manage_traffic_police'),
     path('add_traffic_police', add_traffic_police, name = 'add_traffic_police'),
     path('more_traffic_info/<traffic_id>/', detail_info_view, name = 'detail_info'),
+    path('more_traffic_info_save',detail_info_view_save,name = 'save_traffic_police_detail_info'),
     path('search_traffic',search_all_traffic_police, name = 'search_traffic_police'),
     path('edit_traffic_police/<traffic_police_id>',edit_traffic_police, name = 'edit_traffic_police'),
     path('edit_traffic_police_save', edit_traffic_police_save, name = 'edit_traffic_police_save'),

@@ -17,138 +17,140 @@
 
 {% block content %}
 
+    <div class="content-wrapper">
+      <!--This is Row elements-->
 
 
-<div class="col-12 grid-margin" style="margin: top 50px;">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title">Horizontal Two column</h4>
-        <form class="form-sample">
-          <p class="card-description"> Personal info </p>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Name</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" value="{{traffic.user.first_name}}" />
+        <!--Registartion Form-->
+       <div class="page-header">
+        <h3 class="page-title"> Register User to the System </h3>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Users</a></li>
+            <li class="breadcrumb-item active" aria-current="page">User elements</li>
+          </ol>
+        </nav>
+      </div>
+        <!--end of Registration Form-->
+<div class="col-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Basic User elements</h4>
+              <p class="card-description"> Fill form elements </p>
+              <form role="form" class="forms-sample" method="POST", action="{% url 'save_traffic_police_detail_info' %}">
+
+                 {% csrf_token %}
+
+                 {% comment %} Display Messages {% endcomment %}
+                 {% if messages %}
+                 <div class="form-group">
+                 <div class="col-12">
+                     {% for message in messages %}
+                     {% if message.tags == "error" %}
+                         <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                         {{ message }}
+                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                             <span aria-hidden="true">&times;</span>
+                         </button>
+                         </div>
+                     {% elif message.tags == "success" %}
+                         <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                         {{ message }}
+                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                             <span aria-hidden="true">&times;</span>
+                         </button>
+                         </div>
+                     {% endif %}
+                     {% endfor %}
+                    </div>
+                  </div>
+                  {% endif %}                    
+
+
+
+
+
+                  <div class="form-group">
+                    <label>Assign Location to the Traffic Police</label>
+        
+                    <select name="traffic_police_location" class="js-example-basic-single" style="width:100%">
+                      {% for traffic_police_location in traffic_police_locations %}
+                      <option  value="{{traffic_police_location.id}}" 
+                      {% if traffic_police.location.id == traffic_police_location.id %}
+                        selected
+                      {% endif %}
+                      >
+                      {{traffic_police_location.location_name}}</option>
+                      {% endfor %}
+        
+                    </select>
+         
+                   
+                  </div>
+
+
+        
+                <div class="form-group">
+                  <label for="exampleInputName1">Phone Number</label>
+                  <input type="text" class="form-control" id="exampleInputName1" placeholder="Enter your Phone" name = "phone_number" required value="{{traffic.phone_number}}">
+                  <input type="hidden" name="traffic_police_id" value="{{traffic.id}}">
                 </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Last Name</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" value="{{ traffic.user.last_name}}" />
+
+                <div class="form-group">
+                  <label for="exampleSelectGender">Gender</label>
+                  <select class="form-control" name="gender" id="exampleSelectGender">
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                  </select>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Gender</label>
-                <div class="col-sm-9">
-                  <select class="form-control">
+
+
+                <!-- <div class="form-group">
+                  <label for="exampleInputPassword4">Password</label>
+                  <input type="password" class="form-control" id="exampleInputPassword4" placeholder="Password">
+                </div> -->
+                <!-- <div class="form-group">
+                  <label for="exampleSelectGender">Gender</label>
+                  <select class="form-control" id="exampleSelectGender">
                     <option>Male</option>
                     <option>Female</option>
                   </select>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">phone Number</label>
-                  <div class="col-sm-9">
-                    <input type="text" class="form-control" />
-                  </div>
-                </div>
-              </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">Country</label>
-                  <div class="col-sm-9">
-                    <select class="form-control">
-                      <option>America</option>
-                      <option>Italy</option>
-                      <option>Russia</option>
-                      <option>Britain</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Status</label>
-                <div class="col-sm-4">
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios1" value="" checked> Active </label>
-                  </div>
-                </div>
-                <div class="col-sm-5">
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios2" value="option2"> Deactivate </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Address 2</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Postcode</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label class="col-sm-3 col-form-label">City</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" />
-                </div>
-              </div>
-            </div>
+                </div> -->
 
+                <!-- <div class="form-group">
+                  <label for="exampleInputCity1">City</label>
+                  <input type="text" class="form-control" id="exampleInputCity1" placeholder="Location">
+                </div>
+                <div class="form-group">
+                  <label for="exampleTextarea1">Textarea</label>
+                  <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
+                </div> -->
+                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                <button class="btn btn-dark">Cancel</button>
+              </form>
+            </div>
           </div>
-        </form>
+        </div>
+
+
+
       </div>
     </div>
-  </div>
+{% endblock content %}
 
-  {% endblock content %}
- {% block footer %}
-   
- {% endblock footer %}
-  <!-- Specific Plugin JS goes HERE  -->
-  {% block plugin_javascripts %}
-  
-    <script src="/static/assets/vendors/select2/select2.min.js"></script>
-    <script src="/static/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
-  
-  {% endblock plugin_javascripts %}
-  
-  <!-- Specific Page JS goes HERE  -->
-  {% block javascripts %}
-  
-    <script src="/static/assets/js/file-upload.js"></script>
-    <script src="/static/assets/js/typeahead.js"></script>
-    <script src="/static/assets/js/select2.js"></script>
-  
-  {% endblock javascripts %}
-  
+<!-- Specific Plugin JS goes HERE  -->
+{% block plugin_javascripts %}
+
+  <script src="/static/assets/vendors/select2/select2.min.js"></script>
+  <script src="/static/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+
+{% endblock plugin_javascripts %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script src="/static/assets/js/file-upload.js"></script>
+  <script src="/static/assets/js/typeahead.js"></script>
+  <script src="/static/assets/js/select2.js"></script>
+
+{% endblock javascripts %}
