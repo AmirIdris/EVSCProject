@@ -1,0 +1,69 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Basic Elements {% endblock %}
+
+<!-- Specific Plugin CSS goes HERE -->
+{% block plugin_stylesheets %}
+
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="/static/assets/vendors/select2/select2.min.css">
+  <link rel="stylesheet" href="/static/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+  <!-- End plugin css for this page -->
+
+{% endblock plugin_stylesheets %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Basic form elements</h4>
+        <p class="card-description"> Basic form elements </p>
+        <form method="POST" class="forms-sample" action=" {% url 'edit_traffic_police_save' %}  ">
+          {% csrf_token %}
+          <div class="form-group">
+            {{form.plate_number.errors}}
+            <label for="exampleInputName1">Plate Number</label>
+            {{form.plate_number}}
+          </div>
+          <div class="form-group">
+            {{form.plate_type.errors}}
+            <label for="exampleInputName1">Plate Type</label>
+            {{form.plate_type}}
+          </div>
+
+          <div class="form-group">
+            {{form.vehicle_owner.errors}}
+            <label for="exampleInputEmail3">Plate Owner</label>
+            {{form.vehicle_owner}}
+          </div>
+          <button type="submit" class="btn btn-primary mb-2">Submit</button>
+
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% endblock content %}
+
+<!-- Specific Plugin JS goes HERE  -->
+{% block plugin_javascripts %}
+
+  <script src="/static/assets/vendors/select2/select2.min.js"></script>
+  <script src="/static/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+
+{% endblock plugin_javascripts %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script src="/static/assets/js/file-upload.js"></script>
+  <script src="/static/assets/js/typeahead.js"></script>
+  <script src="/static/assets/js/select2.js"></script>
+
+{% endblock javascripts %}

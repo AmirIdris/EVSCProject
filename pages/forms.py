@@ -42,7 +42,31 @@ class EditTrafficPoliceForm(forms.Form):
     )
 
     traffic_police_location_id = forms.ChoiceField(label="Assign Location", choices = traffic_police_location_list, widget=forms.Select(attrs={"class":"form-control"}))
-    gender = forms.ChoiceField(label="Assign Location", choices = gender_list, widget=forms.Select(attrs={"class":"form-control"}))
+    gender = forms.ChoiceField(label="Assign Location", choices=gender_list, widget=forms.Select(attrs={"class":"form-control"}))
+
+class EditVehicleForm(forms.Form):
+    plate_number = forms.CharField(label='Plate Number', max_length=10, widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Plate Number'}))
+
+    plate_type = forms.CharField(label='Plate type', max_length=10, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder':'Plate Type'
+    }))
+    vehicle_owner = forms.CharField(label='Plate Owner', max_length=10, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Vehicle Owner'
+    }))
+
+    def clean(self):
+        cleaned_data = super(EditVehicleForm,self).clean()
+        plate_number = cleaned_data.get('plate_number')
+        plate_type = cleaned_data.get('plate_type')
+        plate_owner = cleaned_data.get('plate_owner')
+
+        if not plate_number and not plate_type and not plate_owner:
+            raise forms.ValidationError('fill the forms')
+
+
+
 
     
 

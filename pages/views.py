@@ -9,7 +9,7 @@ from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.template import loader
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, EditVehicleForm
 from EVSCapp.models import Vehicle,Records,Report,TrafficPolice,SystemAdmin,TrafficPoliceLocation
 from django.views.decorators.csrf import csrf_protect,requires_csrf_token
 
@@ -126,11 +126,13 @@ def manage_vehicle(request):
 
 
 def edit_vehicle(request, vehicle_id):
-    vehicle=Vehicle.objects.get(id=vehicle_id)
+    vehicle = Vehicle.objects.get(id=vehicle_id)
+    form = EditVehicleForm()
 
-    context={
-        "vehicle":vehicle,
-        "id":vehicle_id
+    context = {
+        "vehicle": vehicle,
+        "id": vehicle_id,
+        "form": form
     }
 
     return render(request, "edit_vehicle_template.html",context)
@@ -209,7 +211,7 @@ def add_user_save(request):
             user.set_password(password)
             user.save()
 
-            return redirect('manage_system_admins')
+            return redirect('manage_system_admin')
                          
                     
                 
@@ -248,11 +250,61 @@ def add_user_save(request):
         # return redirect("to")
 def detail_info_view(request,traffic_id):
     traffic = TrafficPolice.objects.get(id = traffic_id)
+    traffic_police_location = TrafficPoliceLocation.objects.all()
+
+    location_found = []
+    location_not_found = []
+
+    for traffic in traffic_police_location:
+
+        if TrafficPolice.objects.filter(location = traffic.pk).exists():
+            location_found.append(traffic)
+        else:
+            location_not_found.append(traffic)
+ 
     context = {
-        'traffic' : traffic
+        'traffic' : traffic,
+        'traffic_police_locations': location_not_found
+
     }
 
     return render(request,"traffic_info_template.html", context)
+
+def detail_info_view_save(request):
+
+    if request.method != 'POST':
+        messages.error(request,'Invalide method is used')
+        return redirect("detail_info")
+        
+
+    else:
+        id = request.POST.get('traffic_police_id')
+        phone_number = request.POST.get('phone_number')
+        gender = request.POST.get('gender')
+        traffic_police_location = request.POST.get('traffic_police_location')
+
+        try:
+            traffic_police = TrafficPolice.objects.get(pk = id)
+            print(traffic_police)
+
+            traffic_police.phone_number = phone_number
+            print(traffic_police.phone_number)
+            traffic_police.gender = gender
+            traffic_police_sites = TrafficPoliceLocation.objects.get(id = traffic_police_location)
+
+            print(traffic_police_sites)
+            traffic_police.location = traffic_police_sites
+            # print(traffic_police.location)
+            traffic_police.save(update_fields=['phone_number','gender','location'])
+            messages.success(request, "Information is sent to the database successfully")
+            # return redirect("edit_traffic_police", traffic_police_id = id )
+            return redirect("manage_traffic_police")
+        except:
+            messages.error(request,"Failed to store detail Information")
+            return redirect("detail_info", traffic_id = id )
+
+            
+
 
 
 
@@ -326,7 +378,7 @@ def edit_traffic_police(request,traffic_police_id):
             location_found.append(traffic)
         else:
             location_not_found.append(traffic)
-    
+   
 
     context ={
         'traffic_police':traffic_police,
