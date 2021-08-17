@@ -102,11 +102,17 @@ def add_vehicle_save(request):
         return redirect("add_vehicle")
 
     else:
-        vehicle_plate = request.POST.get('vehicle_plate')
+        vehicle_code = request.POST.get('code')
+        vehicle_plate = request.POST.get('plate_number')
         vehicle_type = request.POST.get('vehicle_type')
         vehicle_owner = request.POST.get('vehicle_owner')
+        
+
+        plate_number = str(vehicle_code) + str(vehicle_plate)
+        print(plate_number)
+
         try:
-            vehicle=Vehicle.objects.create(vehicle_plate=vehicle_plate,vehicle_type=vehicle_type, vehicle_owner = vehicle_owner)
+            vehicle=Vehicle.objects.create(vehicle_plate=plate_number,vehicle_type=vehicle_type, vehicle_owner = vehicle_owner)
             vehicle.save()
             messages.success(request, "Vehicle Added successfully")
             return redirect("add_vehicle")
@@ -114,6 +120,7 @@ def add_vehicle_save(request):
         except:
             messages.error(request, "Vehicle is not Added")
             return redirect("add_vehicle")
+
 
 
 def manage_vehicle(request):
@@ -249,7 +256,7 @@ def add_user_save(request):
 
         # return redirect("to")
 def detail_info_view(request,traffic_id):
-    traffic = TrafficPolice.objects.get(id = traffic_id)
+    traffic_police = TrafficPolice.objects.get(id = traffic_id)
     traffic_police_location = TrafficPoliceLocation.objects.all()
 
     location_found = []
@@ -263,7 +270,8 @@ def detail_info_view(request,traffic_id):
             location_not_found.append(traffic)
  
     context = {
-        'traffic' : traffic,
+        'traffic' : traffic_police,
+        'id' : traffic_id,
         'traffic_police_locations': location_not_found
 
     }
@@ -612,6 +620,31 @@ def view_record_location_on_map(request, location_id):
 
     return render(request, "view_record_on_map_template.html",context)
 
+
+def add_location_view(request):
+    return render(request, "add_location_template.html")
+
+def add_location_save_view(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid method")
+
+        return redirect("add_vehicle")
+
+    else:
+        location_name = request.POST.get('location_name')
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')
+        
+
+        try:
+            location=TrafficPoliceLocation.objects.create(location_name=location_name,latitude=latitude, longitude = longitude)
+            location.save()
+            messages.success(request, "Location Added successfully")
+            return redirect("add_location")
+
+        except:
+            messages.error(request, "Location is not Added")
+            return redirect("add_location")
 
 
 

@@ -10,7 +10,7 @@ from django_extensions.db.models import TimeStampedModel
 
 class Vehicle(models.Model):
     """Model definition for Vehicle."""
-    vehicle_plate=models.IntegerField()
+    vehicle_plate=models.CharField(max_length=11)
     vehicle_type=models.CharField(max_length=100)
     vehicle_owner=models.CharField(max_length=100)
 
