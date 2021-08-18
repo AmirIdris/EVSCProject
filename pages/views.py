@@ -620,6 +620,19 @@ def view_record_location_on_map(request, location_id):
 
     return render(request, "view_record_on_map_template.html",context)
 
+#Location related Views
+def manage_location(request):
+    location = TrafficPoliceLocation.objects.all()
+    context = {
+        "locations" : location
+    }
+
+    return render(request, "location_view_template.html",context)
+
+
+
+
+
 
 def add_location_view(request):
     return render(request, "add_location_template.html")
@@ -645,6 +658,37 @@ def add_location_save_view(request):
         except:
             messages.error(request, "Location is not Added")
             return redirect("add_location")
+
+def view_location_on_map(request, location_id):
+
+    location = TrafficPoliceLocation.objects.get(id = location_id)
+    latitude = location.latitude
+    longitude = location.longitude
+
+    map = folium.Map(location = [float(latitude), float(longitude)],zoom_start = 13)
+    folium.Marker(location = [float(latitude),float(longitude)],
+    tooltip = 'click for more',
+    popup='Vehicle Plate is:'+ location.location_name,
+    icon = folium.Icon(color = 'red', icon = 'info-sign')
+    ).add_to(map)
+
+    folium.raster_layers.TileLayer('Stamen Terrain').add_to(map)
+    folium.raster_layers.TileLayer('Stamen Toner').add_to(map)
+    folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)
+    folium.raster_layers.TileLayer('CartoDB Positron').add_to(map)
+    folium.raster_layers.TileLayer('CartoDB Dark_Matter').add_to(map)
+
+
+    folium.LayerControl().add_to(map)
+
+    map = map._repr_html_()
+
+    context = {
+        'map':map
+    }
+
+    return render(request, "view_location_on_map_template.html",context)
+
 
 
 
