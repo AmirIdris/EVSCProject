@@ -257,7 +257,7 @@ def detail_info_view(request,traffic_id):
 
     for traffic in traffic_police_location:
 
-        if TrafficPolice.objects.filter(location = traffic.pk).exists():
+        if TrafficPolice.objects.filter(location = traffic.pk).exists() and TrafficPolice.objects.get(pk = traffic_id):
             location_found.append(traffic)
         else:
             location_not_found.append(traffic)
@@ -374,7 +374,7 @@ def edit_traffic_police(request,traffic_police_id):
 
     for traffic in traffic_police_location:
 
-        if TrafficPolice.objects.filter(location = traffic.pk).exists():
+        if TrafficPolice.objects.filter(location = traffic.pk, id = traffic_police_id).exists():
             location_found.append(traffic)
         else:
             location_not_found.append(traffic)
@@ -383,7 +383,7 @@ def edit_traffic_police(request,traffic_police_id):
     context ={
         'traffic_police':traffic_police,
         'id':traffic_police_id,
-        'traffic_police_locations': location_not_found
+        'traffic_police_locations': location_found
     }
 
     return render(request, "edit_traffic_police_template.html", context)
