@@ -16,7 +16,6 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-<a class="btn btn-primary" style="width: 50%;" href="{% url 'add_vehicle' %}" role="button">+ Add Vehicles</a> <br/>&nbsp;
 {% if messages %}
 <div class="form-group">
 <div class="col-12">
@@ -41,7 +40,7 @@
 </div>
 {% endif %}
 
-        <div class="row">
+        <div class="row" style="margin-bottom: -300px;">
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header card-header-primary">

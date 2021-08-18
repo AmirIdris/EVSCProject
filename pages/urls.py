@@ -26,7 +26,11 @@ from pages.views import (index,
                         search_all_vehicle_records,
                         search_all_vehicle,
                         view_record_location_on_map,
-                        detail_info_view_save
+                        detail_info_view_save,
+                        add_location_view,
+                        add_location_save_view,
+                        manage_location,
+                        view_location_on_map
 
                         )
 
@@ -66,6 +70,12 @@ urlpatterns = [
     #record related urls
     path('view_records/',records_view, name = 'view_records'),
     path('view_record_on_map/<location_id>',view_record_location_on_map, name = 'view_record_on_map'),
+
+    #location related urls
+    path('manage_location/',manage_location, name = 'manage_location'),
+    path('view_location_on_map/<location_id>',view_location_on_map, name = 'view_location_on_map'),
+    path('add_location/',add_location_view, name = 'add_location'),
+    path('add_location_save',add_location_save_view, name = 'add_location_save'),
 
     # pages urls
     re_path(r'^.*\.*', pages, name='pages'),

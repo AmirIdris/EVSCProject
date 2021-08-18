@@ -129,6 +129,13 @@
                   <li class="nav-item" style="display: inline-block;"> <a class="nav-link" style = "font-size: 13px;" href="{% url 'manage_vehicle' %}">Manage Vehicle</a></li>
 
                 </div>
+
+
+                <div>
+                  <i class = "mdi mdi-panorama-fisheye"></i>
+                  <li class="nav-item" style="display: inline-block;"> <a class="nav-link" style = "font-size: 13px;" href="{% url 'manage_location' %}">Manage Location</a></li>
+
+                </div>
                 
                 
                 <!--li class="nav-item"> <a class="nav-link" href="/buttons.html">Buttons</a></li-->
@@ -137,6 +144,24 @@
               </ul>
             </div>
           </li>
+
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="{% url 'add_location' %}">
+            <span class="menu-icon">
+              <i class="mdi mdi-map-marker-plus"></i>
+            </span>
+            <span class="menu-title">Add Location</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="{% url 'add_vehicle' %}">
+            <span class="menu-icon">
+              <i class="mdi mdi-truck"></i>
+            </span>
+            <span class="menu-title">Add Vehicle</span>
+          </a>
+        </li>
 
 <!--End of View Element-->
 
