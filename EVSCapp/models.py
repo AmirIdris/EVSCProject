@@ -121,9 +121,11 @@ class Report(models.Model):
         return self.description
 class SystemAdmin(models.Model):
     """Model definition for SystemAdmin."""
+    gender_choices=(('M','Male'),('F','Female'))
     user=models.OneToOneField(User, on_delete=models.CASCADE,related_name="system_admin")
     phone_number=models.CharField(max_length=50)
     status=models.BooleanField("Active",default=True)
+    gender = models.CharField(max_length = 1, choices = gender_choices ,default='M')
     profile_picture = models.FileField(null = True)
 
     # TODO: Define fields here
