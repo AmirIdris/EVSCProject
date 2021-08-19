@@ -264,7 +264,7 @@ def detail_info_view(request,traffic_id):
 
     for traffic in traffic_police_location:
 
-        if TrafficPolice.objects.filter(location = traffic.pk).exists():
+        if TrafficPolice.objects.filter(location = traffic.pk).exists() and TrafficPolice.objects.get(pk = traffic_id):
             location_found.append(traffic)
         else:
             location_not_found.append(traffic)
@@ -382,7 +382,7 @@ def edit_traffic_police(request,traffic_police_id):
 
     for traffic in traffic_police_location:
 
-        if TrafficPolice.objects.filter(location = traffic.pk).exists():
+        if TrafficPolice.objects.filter(location = traffic.pk, id = traffic_police_id).exists():
             location_found.append(traffic)
         else:
             location_not_found.append(traffic)
@@ -391,7 +391,7 @@ def edit_traffic_police(request,traffic_police_id):
     context ={
         'traffic_police':traffic_police,
         'id':traffic_police_id,
-        'traffic_police_locations': location_not_found
+        'traffic_police_locations': location_found
     }
 
     return render(request, "edit_traffic_police_template.html", context)
@@ -488,7 +488,7 @@ def admin_profile(request):
         "user" : user
     }
 
-    return render(request,"page-user.html", context)
+    return render(request,"admin_profile_template.html", context)
 
 def admin_profile_update(request):
     if request.method != 'POST':
@@ -501,6 +501,8 @@ def admin_profile_update(request):
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         phone_number = request.POST.get('phone_number')
+        gender = request.POST.get('gender')
+        password = request.POST.get('password')
 
         try:
             user = User.objects.get(id = request.user.id)
@@ -508,10 +510,13 @@ def admin_profile_update(request):
             user.first_name = first_name
             user.last_name = last_name
             user.email = email
+            if password != None and password != '':
+                user.set_password(password)
             user.save()
 
             system_admin = SystemAdmin.objects.get(user = request.user)
             system_admin.phone_number = phone_number
+            system_admin.gender = gender
             system_admin.save()
 
             messages.success(request, "Profile Updated successfully")

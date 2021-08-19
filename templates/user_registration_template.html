@@ -96,11 +96,17 @@
                         <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios1"  value="1" checked> Traffic Police </label>
                     </div>
                   </div>
+
+                  
+                  
                   <div class="col-sm-5">
+                    {% if request.user.is_superuser  %}
                     <div class="form-check">
                       <label class="form-check-label">
                         <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios2" value="2"> System Admin </label>
                     </div>
+
+                  {% endif %}                  
                   </div>
                 </div>
 
@@ -125,7 +131,7 @@
                   <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
                 </div> -->
                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                <button class="btn btn-dark">Cancel</button>
+                
               </form>
             </div>
           </div>
