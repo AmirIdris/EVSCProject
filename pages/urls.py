@@ -30,7 +30,8 @@ from pages.views import (index,
                         add_location_view,
                         add_location_save_view,
                         manage_location,
-                        view_location_on_map
+                        view_location_on_map,
+                        data_visualizatio
 
                         )
 
@@ -78,6 +79,7 @@ urlpatterns = [
     path('add_location_save',add_location_save_view, name = 'add_location_save'),
 
     # pages urls
+    path('data_visualization/',data_visualizatio, name = 'visualize_data'),
     re_path(r'^.*\.*', pages, name='pages'),
 
     

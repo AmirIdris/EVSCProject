@@ -695,6 +695,10 @@ def view_location_on_map(request, location_id):
     return render(request, "view_location_on_map_template.html",context)
 
 
+def data_visualizatio(request):
+    return render(request,"chartjs.html")
+
+
 
 
 
