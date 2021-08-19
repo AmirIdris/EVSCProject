@@ -52,14 +52,7 @@ class Records(models.Model):
         """Unicode representation of Records."""
         return str(self.vehicle.vehicle_plate)
 
-class Notification(models.Model):
-    recipient=models.ForeignKey(User,on_delete=models.CASCADE)
-    records=models.OneToOneField(Records,on_delete=models.CASCADE)
-    content=models.TextField(null=True)
 
-
-    def __str__(self):
-        return str(self.records.vehicle)
 
 class TrafficPoliceLocation(models.Model):
     location_name = models.CharField(max_length=50)
@@ -94,6 +87,16 @@ class TrafficPolice(models.Model):
     def __str__(self):
         """Unicode representation of TrafficPolice."""
         return self.user.username
+
+class Notification(models.Model):
+    recipient=models.ForeignKey(TrafficPolice,on_delete=models.CASCADE)
+    records=models.OneToOneField(Records,on_delete=models.CASCADE)
+    content=models.TextField(null=True)
+
+
+    def __str__(self):
+        return str(self.records.vehicle)
+        
 
 class Report(models.Model):
     """Model definition for Report."""

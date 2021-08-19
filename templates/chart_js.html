@@ -1,0 +1,55 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Charts {% endblock %} 
+
+<!-- Specific Plugin CSS goes HERE -->
+{% block plugin_stylesheets %}{% endblock plugin_stylesheets %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+{% endblock content %}
+
+<!-- Specific Plugin JS goes HERE  -->
+{% block plugin_javascripts %}
+
+  <script src="/static/assets/vendors/chart.js/Chart.min.js"></script>
+  <script>
+      
+
+var config = {
+  type: 'pie',
+  data: {
+    datasets: [{
+      data: {{ data|safe }},
+      backgroundColor: [
+        '#696969', '#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3'
+      ],
+      label: 'Population'
+    }],
+    labels: {{ labels|safe }}
+  },
+  options: {
+    responsive: true
+  }
+};
+
+window.onload = function() {
+  var ctx = document.getElementById('pieChart').getContext('2d');
+  window.myPie = new Chart(ctx, config);
+};
+
+
+    
+  </script>
+
+{% endblock plugin_javascripts %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script src="/static/assets/js/chart.js"></script>
+
+{% endblock javascripts %}

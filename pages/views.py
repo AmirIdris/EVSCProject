@@ -391,7 +391,7 @@ def edit_traffic_police(request,traffic_police_id):
     context ={
         'traffic_police':traffic_police,
         'id':traffic_police_id,
-        'traffic_police_locations': location_found
+        'traffic_police_locations': location_not_found
     }
 
     return render(request, "edit_traffic_police_template.html", context)
@@ -693,6 +693,10 @@ def view_location_on_map(request, location_id):
     }
 
     return render(request, "view_location_on_map_template.html",context)
+
+
+def data_visualizatio(request):
+    return render(request,"chartjs.html")
 
 
 
