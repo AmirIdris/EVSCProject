@@ -89,7 +89,7 @@ class TrafficPolice(models.Model):
         return self.user.username
 
 class Notification(models.Model):
-    recipient=models.OneToOneField(TrafficPolice,on_delete=models.CASCADE,related_name="traffic_police_notification")
+    recipient=models.ForeignKey(TrafficPolice,on_delete=models.CASCADE,related_name="traffic_police_notification")
     records=models.OneToOneField(Records,on_delete=models.CASCADE,related_name="record_notification")
     content=models.TextField(null=True)
 

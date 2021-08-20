@@ -21,33 +21,30 @@ class VehicleSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-# class RecordSerializer(serializers.ModelSerializer):
-#     vehicle=VehicleSerializer(read_only=True)
-
-#     class Meta:
-#         model=Records
-#         fields=['vehicle','location','vehicle_speed','duration']
-
 class RecordSerializer(serializers.ModelSerializer):
-    created_at=serializers.SerializerMethodField(read_only=True)
-    latitude = serializers.CharField()
-    longitude = serializers.CharField()
-    # location=PointField()
     class Meta:
         model=Records
-        exclude=['duration','location','status']
+        fields=['vehicle','latitude','longitude','vehicle_speed','address']
+
+# class RecordSerializer(serializers.ModelSerializer):
+#     created_at=serializers.SerializerMethodField(read_only=True)
+#     latitude = serializers.CharField()
+#     longitude = serializers.CharField()
+#     # vehicle_plate = serializers.CharField(source = "vehicle.vehicle_plate")
+#     # location=PointField()
+#     class Meta:
+#         model=Records
+#         exclude=['duration','status']
 
 
-    def create(self,validated_data):
-        latitude = validated_data['latitude']
-        longitude = validated_data['longitude']
-        location = Point(float(latitude), float(longitude),srid=4326)
-        obj=Records.objects.create(address = validated_data['address'],vehicle_speed=validated_data['vehicle_speed'],vehicle=validated_data['vehicle'])
-        obj.save(location = location)
-        return obj
+#     def create(self,validated_data):
+        
+        
+#         obj=Records.objects.create(address = validated_data['address'],vehicle_speed=validated_data['vehicle_speed'],vehicle=validated_data['vehicle'],latitude = validated_data['latitude'],longitude = validated_data['longitude'])
+#         return obj
 
-    def get_created_at(self,instance):
-        return instance.created_at.strftime("%B %d %Y")
+#     def get_created_at(self,instance):
+#         return instance.created_at.strftime("%B %d %Y")
 
 class ReportSerializer(serializers.ModelSerializer):
     
@@ -122,11 +119,11 @@ class UserSerializer(serializers.Serializer):
 
 
 
-class RecordSerializer(serializers.Serializer):
-    # records=serializers.SerializerMethodField(read_only=False)
-    id = ReadOnlyField()
-    recipient = ReadOnlyField(source = "traffic_police_notification.recipient")
-    records = ReadOnlyField(source = "record_notification.vehicle.plate_number")
+# class RecordSerializer(serializers.Serializer):
+#     # records=serializers.SerializerMethodField(read_only=False)
+#     id = ReadOnlyField()
+#     recipient = ReadOnlyField(source = "traffic_police_notification.recipient")
+#     records = ReadOnlyField(source = "record_notification.vehicle.plate_number")
 
 
 
