@@ -202,6 +202,7 @@ def add_user_save(request):
 
         
         password = User.objects.make_random_password()
+        print(password)
         if is_traffic == "1":               
             user = User.objects.create(first_name = first_name, last_name = last_name, email = email, username =  usernam, is_staff = False)
             
@@ -391,7 +392,7 @@ def edit_traffic_police(request,traffic_police_id):
     context ={
         'traffic_police':traffic_police,
         'id':traffic_police_id,
-        'traffic_police_locations': location_not_found
+        'traffic_police_locations': location_found
     }
 
     return render(request, "edit_traffic_police_template.html", context)

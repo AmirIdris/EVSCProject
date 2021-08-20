@@ -25,7 +25,18 @@
 
 {% block content %}
 
-{% if messages %}
+
+
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <a class="btn btn-primary" style="width: 30%; margin-top: 20px;" href="{% url 'add_user' %}" role="button">+ Add
+        Traffic</a> <br />&nbsp;
+      <div class="card-header card-header-primary">
+        <h4 class="card-title ">Simple Table</h4>
+        <p class="card-category"> Here is a subtitle for this table</p>
+        {% if messages %}
 <div class="form-group">
   <div class="col-12">
     {% for message in messages %}
@@ -48,16 +59,6 @@
   </div>
 </div>
 {% endif %}
-
-
-<div class="row">
-  <div class="col-md-12">
-    <div class="card">
-      <a class="btn btn-primary" style="width: 30%; margin-top: 20px;" href="{% url 'add_user' %}" role="button">+ Add
-        Traffic</a> <br />&nbsp;
-      <div class="card-header card-header-primary">
-        <h4 class="card-title ">Simple Table</h4>
-        <p class="card-category"> Here is a subtitle for this table</p>
       </div>
 
 
