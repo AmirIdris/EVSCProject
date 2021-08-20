@@ -31,7 +31,9 @@ from pages.views import (index,
                         add_location_save_view,
                         manage_location,
                         view_location_on_map,
-                        data_visualizatio
+                        data_visualizatio,
+                        assign_traffic_location,
+                        assign_traffic_location_save
 
                         )
 
@@ -77,6 +79,8 @@ urlpatterns = [
     path('view_location_on_map/<location_id>',view_location_on_map, name = 'view_location_on_map'),
     path('add_location/',add_location_view, name = 'add_location'),
     path('add_location_save',add_location_save_view, name = 'add_location_save'),
+    path('assign_location_to_traffic/',assign_traffic_location, name = 'assign_location_to_traffic'),
+    path('assign_location_to_traffic_save',assign_traffic_location_save, name = 'assign_location_to_traffic_save'),
 
     # pages urls
     path('data_visualization/',data_visualizatio, name = 'visualize_data'),

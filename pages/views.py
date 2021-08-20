@@ -700,6 +700,72 @@ def data_visualizatio(request):
     return render(request,"chartjs.html")
 
 
+def assign_traffic_location(request):
+    traffics = TrafficPolice.objects.all()
+    locations = TrafficPoliceLocation.objects.all()
+
+    none_assigned_traffic = []
+    assigned_traffic = []
+    free_locations = []
+    occupied_location = []
+
+    for location in locations:
+        if TrafficPolice.objects.filter(location = location.id).exists():
+            occupied_location.append(location)
+        else:
+            free_locations.append(location)
+            for traffic in traffics:
+                if TrafficPolice.objects.filter(location = location.id).values() == None:
+                    none_assigned_traffic.append(traffic)
+                else:
+                    assigned_traffic.append(traffic)
+
+    print(free_locations,none_assigned_traffic)
+
+    # for traffic in traffics:
+    #     if TrafficPolice.objects.filter(location = ).exists():
+    #         none_assigned_traffic.append(traffic)
+    #     else:
+    #         assigned_traffic.append(traffic)
+
+    context = {
+        "none_assigned_traffics": none_assigned_traffic,
+        "free_locations": free_locations
+    }
+
+    
+    return render(request,"assign_location_to_traffic_template.html",context)
+
+
+def assign_traffic_location_save(request):
+    if request.method != "POST":
+        messages.error(request,"Invalid method has been used")
+        return redirect('assign_location_to_traffic')
+
+    else:
+        traffic = request.POST.get('traffic')
+        location = request.POST.get('location')
+        print(traffic)
+        print(location)
+        
+
+        try:
+            traffic_police = TrafficPolice.objects.get(pk = traffic)
+            print(traffic_police.location)
+            print(traffic_police)
+
+            traffic_police.location = location
+            print(traffic_police.location)
+            traffic_police.save()
+            messages.success(request,"profile is updated successfully")
+            return redirect('assign_location_to_traffic')
+
+        except:
+            messages.error(request,"unable to assign location")
+            return redirect('assign_location_to_traffic')
+
+            
+
 
 
 
