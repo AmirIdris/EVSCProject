@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 # from TrafficReport.api.serializes import ReportSerializer
-from EVSCapp.models import Report,TrafficPolice,Vehicle,Records
+from EVSCapp.models import Notification, Report,TrafficPolice,Vehicle,Records
 from rest_framework import generics, serializers,viewsets,status
 from rest_framework.generics import get_object_or_404
 from rest_framework.views import APIView
@@ -10,7 +10,8 @@ from EVSCapp.EVSCApi.serializers import (VehicleSerializer,
                                           ReportSerializer,
                                           FcmDevicesSerializer,
                                           UserProfileSerializer,
-                                          UserSerializer)
+                                          UserSerializer,
+                                          NotificationSerializer)
 
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
@@ -127,6 +128,13 @@ class ListUser(generics.ListAPIView):
 class ListUserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset=User.objects.all()
     serializer_class=UserSerializer
+
+
+class ListNotification(generics.ListAPIView):
+    queryset=Notification.objects.all()
+    serializer_class=NotificationSerializer
+
+
  
 
 

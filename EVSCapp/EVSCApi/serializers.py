@@ -1,4 +1,4 @@
-from EVSCapp.models import Report,Vehicle,TrafficPolice,Records
+from EVSCapp.models import Notification, Report,Vehicle,TrafficPolice,Records
 from django.conf import settings
 from django.db.models import fields
 from rest_auth.models import TokenModel
@@ -108,19 +108,40 @@ class UserSerializer(serializers.Serializer):
     first_name = ReadOnlyField()
     last_name = ReadOnlyField()
     phone_number = ReadOnlyField(source = "traffic_police.phone_number")
-    latitude = DecimalField(source = "traffic_police.user.latitude", max_digits=9, decimal_places=6)
-    longitude = DecimalField(source = "traffic_police.user.longitude", max_digits=9, decimal_places=6)
 
 
 
-class RecordSerializer(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
+        return instance
+
+
+
+
+class RecordSerializer(serializers.Serializer):
     # records=serializers.SerializerMethodField(read_only=False)
-    created_at=serializers.SerializerMethodField()
-    class Meta:
-        model=Records
-        exclude = ('status',)
-    def get_created_at(self,instance):
-        return instance.created_at.strftime("%B %d %Y")
+    id = ReadOnlyField()
+    recipient = ReadOnlyField(source = "traffic_police_notification.recipient")
+    records = ReadOnlyField(source = "record_notification.vehicle.plate_number")
+
+
+
+
+class NotificationSerializer(serializers.Serializer):
+    notification_id = ReadOnlyField(source = "id")
+    record_id = ReadOnlyField(source = "records.id")
+    plate_number = ReadOnlyField(source = "records.vehicle.vehicle_plate")
+    vehicle_speed = ReadOnlyField(source = "records.vehicle_speed")
+    latitude = ReadOnlyField(source = "records.latitude")
+    longtude = ReadOnlyField(source = "records.longitude")
+    
+
+
+    
 
     
     
