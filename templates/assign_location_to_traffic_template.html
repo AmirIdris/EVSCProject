@@ -67,7 +67,7 @@
                 <input type="hidden" name="id" value="{{none_assigned_traffic.id}}">
                 <select name="traffic" class="js-example-basic-single" style="width:100%" >
                   {% for none_assigned_traffic in none_assigned_traffics %}
-                  <option value="{{none_assigned_traffic.id}}">{{none_assigned_traffic.user.username}}</option>
+                  <option value="{{none_assigned_traffic.id}}">{{none_assigned_traffic.user.first_name}}</option>
                   {% endfor %}
                     
                 </select>
@@ -81,7 +81,7 @@
                 <select class="js-example-basic-single" style="width:100%" name="location">
                   
                   {% for free_location in free_locations %}
-                  <option value="{{free_location.location_name}}">{{free_location.location_name}}</option>
+                  <option value="{{free_location.id}}">{{free_location.location_name}}</option>
                     
                   {% endfor %}
                 </select>

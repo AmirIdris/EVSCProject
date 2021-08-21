@@ -257,7 +257,7 @@ def add_user_save(request):
 
         # return redirect("to")
 def detail_info_view(request,traffic_id):
-    traffic_police = TrafficPolice.objects.get(id = traffic_id)
+    traffic = TrafficPolice.objects.get(id = traffic_id)
     traffic_police_location = TrafficPoliceLocation.objects.all()
 
     location_found = []
@@ -271,7 +271,7 @@ def detail_info_view(request,traffic_id):
             location_not_found.append(traffic)
  
     context = {
-        'traffic' : traffic_police,
+        'traffic' : traffic,
         'id' : traffic_id,
         'traffic_police_locations': location_not_found
 
@@ -293,18 +293,18 @@ def detail_info_view_save(request):
         traffic_police_location = request.POST.get('traffic_police_location')
 
         try:
-            traffic_police = TrafficPolice.objects.get(pk = id)
-            print(traffic_police)
+            traffic = TrafficPolice.objects.get(pk = id)
+            print(traffic)
 
-            traffic_police.phone_number = phone_number
-            print(traffic_police.phone_number)
-            traffic_police.gender = gender
+            traffic.phone_number = phone_number
+            print(traffic.phone_number)
+            traffic.gender = gender
             traffic_police_sites = TrafficPoliceLocation.objects.get(id = traffic_police_location)
 
             print(traffic_police_sites)
-            traffic_police.location = traffic_police_sites
-            # print(traffic_police.location)
-            traffic_police.save(update_fields=['phone_number','gender','location'])
+            traffic.location = traffic_police_sites
+            # print(traffic.location)
+            traffic.save(update_fields=['phone_number','gender','location'])
             messages.success(request, "Information is sent to the database successfully")
             # return redirect("edit_traffic_police", traffic_police_id = id )
             return redirect("manage_traffic_police")
@@ -319,20 +319,20 @@ def detail_info_view_save(request):
 
 
 def manage_traffic_police(request):
-    traffic_police = TrafficPolice.objects.all()
+    traffic = TrafficPolice.objects.all()
 
     page = request.GET.get('page',1)
-    paginator = Paginator(traffic_police, 10)
+    paginator = Paginator(traffic, 10)
     try:
-        traffic_police = paginator.page(page)
+        traffic = paginator.page(page)
     except PageNotAnInteger:
-        traffic_police = paginator.page(1)
+        traffic = paginator.page(1)
     except EmptyPage:
-        traffic_police = paginator.page(paginator.num_pages)
+        traffic = paginator.page(paginator.num_pages)
 
 
     context = {
-        "traffic_polices" : traffic_police
+        "traffic_polices" : traffic
     }
 
     return render(request, "manage_traffic_template.html",context)
@@ -374,7 +374,7 @@ def add_traffic_police_save(request):
                 messages.error(request, "Failed to save")
 
 def edit_traffic_police(request,traffic_police_id):
-    traffic_police = TrafficPolice.objects.get(id = traffic_police_id)
+    traffic = TrafficPolice.objects.get(id = traffic_police_id)
 
     traffic_police_location = TrafficPoliceLocation.objects.all()
 
@@ -390,7 +390,7 @@ def edit_traffic_police(request,traffic_police_id):
    
 
     context ={
-        'traffic_police':traffic_police,
+        'traffic':traffic,
         'id':traffic_police_id,
         'traffic_police_locations': location_found
     }
@@ -418,7 +418,7 @@ def edit_traffic_police_save(request):
         traffic_police_location = request.POST.get('traffic_police_location')
 
         try:
-            user = User.objects.get(traffic_police = id)
+            user = User.objects.get(traffic = id)
             print(user)
             user.username = username
             user.first_name = first_name
@@ -433,18 +433,18 @@ def edit_traffic_police_save(request):
 
             user.save()
             print(id)
-            traffic_police = TrafficPolice.objects.get(pk = id)
-            print(traffic_police)
+            traffic = TrafficPolice.objects.get(pk = id)
+            print(traffic)
 
-            traffic_police.phone_number = phone_number
-            print(traffic_police.phone_number)
-            traffic_police.gender = gender
+            traffic.phone_number = phone_number
+            print(traffic.phone_number)
+            traffic.gender = gender
             traffic_police_sites = TrafficPoliceLocation.objects.get(id = traffic_police_location)
 
             print(traffic_police_sites)
-            traffic_police.location = traffic_police_sites
-            # print(traffic_police.location)
-            traffic_police.save(update_fields=['phone_number','gender','location'])
+            traffic.location = traffic_police_sites
+            # print(traffic.location)
+            traffic.save(update_fields=['phone_number','gender','location'])
             messages.success(request, "Profile Updated successfully")
             # return redirect("edit_traffic_police", traffic_police_id = id )
             return redirect("manage_traffic_police")
@@ -459,10 +459,10 @@ def edit_traffic_police_save(request):
 
 
 def delete_traffic_police(request, traffic_police_id):
-    traffic_police = TrafficPolice.objects.get(id = traffic_police_id)
+    traffic = TrafficPolice.objects.get(id = traffic_police_id)
 
     try:
-        traffic_police.delete()
+        traffic.delete()
         messages.success(request, "successfully deleted")
         return redirect('manage_traffic_police')
 
@@ -708,19 +708,23 @@ def assign_traffic_location(request):
     assigned_traffic = []
     free_locations = []
     occupied_location = []
+    # print(TrafficPolice.objects.filter(location__isnull=True).values())
 
     for location in locations:
         if TrafficPolice.objects.filter(location = location.id).exists():
+            
             occupied_location.append(location)
         else:
+            print(location)
             free_locations.append(location)
-            for traffic in traffics:
-                if TrafficPolice.objects.filter(location = location.id).values() == None:
-                    none_assigned_traffic.append(traffic)
-                else:
-                    assigned_traffic.append(traffic)
+    for traffic in traffics: 
+        if TrafficPolice.objects.filter(location_id__isnull=True,id =traffic.id):
+            print(traffic)
+            none_assigned_traffic.append(traffic)
+        else:
+            assigned_traffic.append(traffic)
 
-    print(free_locations,none_assigned_traffic)
+
 
     # for traffic in traffics:
     #     if TrafficPolice.objects.filter(location = ).exists():
@@ -749,20 +753,21 @@ def assign_traffic_location_save(request):
         print(location)
         
 
-        try:
-            traffic_police = TrafficPolice.objects.get(pk = traffic)
-            print(traffic_police.location)
-            print(traffic_police)
+        
+        traffic = TrafficPolice.objects.get(pk = traffic)
+        print(traffic)
+        traffic_locations = TrafficPoliceLocation.objects.get(pk = location)
 
-            traffic_police.location = location
-            print(traffic_police.location)
-            traffic_police.save()
-            messages.success(request,"profile is updated successfully")
-            return redirect('assign_location_to_traffic')
 
-        except:
-            messages.error(request,"unable to assign location")
-            return redirect('assign_location_to_traffic')
+        print(traffic.id)
+        print(traffic)
+
+        traffic.location = traffic_locations
+        print(traffic.location)
+        traffic.save()
+        messages.success(request,"profile is updated successfully")
+        return redirect('assign_location_to_traffic')
+
 
             
 
