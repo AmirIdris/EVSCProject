@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
-from .models import TrafficPolice,SystemAdmin,Records,Notification,Report
+from .models import TrafficPolice,SystemAdmin,Records,Notification,Report, TrafficPoliceLocation
 from django.dispatch import receiver
 from pyfcm import FCMNotification
 
@@ -29,12 +29,18 @@ def send_notification(sender,instance,created,**kwargs):
 
         traffic_police_location_list = []
         all_traffic_police = TrafficPolice.objects.all()
+        all_traffic_police_count =TrafficPolice.objects.all().count()
+        traffic_police_location_count = TrafficPoliceLocation.objects.all().count()
         
 
 
         # append all traffic police location to the list
         for traffic_police in all_traffic_police:
+            if traffic_police.location == None:
+                continue
             traffic_police_location_list.append({"latitude": traffic_police.location.latitude, "longitude": traffic_police.location.longitude,"obj": traffic_police})
+
+
 
         # cheack weather the traffic police location exists or not
         if len(traffic_police_location_list) > 0:
@@ -79,20 +85,14 @@ def send_notification(sender,instance,created,**kwargs):
         notification = Notification.objects.create(recipient = nearby_traffic_police, records = instance, content = "message_body")
         notification.save()
 
-        # push_service = FCMNotification(api_key = 'AAAAbG5wAg0:APA91bH60qfGn4rg2B-2bSWicLWShygvmNrlrSX0LM9VzM9Srqcxvo3XIX9ODSrk92Zhuk4kPQ10V5DCRVVzDXN7koQSSP7S8aQhtRZQEULS10nL57k_Ote3AQzcolVRcuCnV8NgcGdw')
-        # # registration_id = TrafficPolice.objects.values_list('fcm_token',flat=True).get(user= nearby_traffic_police.id)
-        # registration_id = nearby_traffic_police.fcm_token
-        # print(registration_id)
-        # message_title = 'Notification test'
-        # message_body = "Hi Aman, We made it bro!"
-        # result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
-
-        
-
-
-
-        
-        # print(result)
+        push_service = FCMNotification(api_key = 'AAAAbG5wAg0:APA91bH60qfGn4rg2B-2bSWicLWShygvmNrlrSX0LM9VzM9Srqcxvo3XIX9ODSrk92Zhuk4kPQ10V5DCRVVzDXN7koQSSP7S8aQhtRZQEULS10nL57k_Ote3AQzcolVRcuCnV8NgcGdw')
+        # registration_id = TrafficPolice.objects.values_list('fcm_token',flat=True).get(user= nearby_traffic_police.id)
+        registration_id = nearby_traffic_police.fcm_token
+        print(registration_id)
+        message_title = 'Notification test'
+        message_body = "Hi Aman, We made it bro!"
+        result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body) 
+        print(result)
         
 # @receiver(post_save,sender = Report)
 # def notificatio(post_save, instance, created, **kwargs):

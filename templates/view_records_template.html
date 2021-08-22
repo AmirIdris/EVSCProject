@@ -45,8 +45,7 @@
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title ">Simple Table</h4>
-                  <p class="card-category"> Here is a subtitle for this table</p>
+                  <h4 class="card-title ">Records Commited by Vehicle</h4>
                 </div>
                 <form method="GET" class="form-group" style="width: 50%;" action="{% url 'search_vehicle_record' %} ">
                   
@@ -74,6 +73,7 @@
                         </tr>
                       </thead>
                       <tbody>
+                        
                         {% for record in records %}
                         <tr>
                             <td>{{record.id}}</td>
@@ -89,7 +89,7 @@
                             {% if record.status == False  %}
                             <label class="badge badge-danger">Pending</label>
                             {% else %}
-                            <label class="badge badge-success">Approved</label>
+                            <label class="badge badge-success">Reported</label>
                             {% endif %}
 
                           </td>

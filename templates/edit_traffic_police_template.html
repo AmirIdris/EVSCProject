@@ -57,7 +57,7 @@
           {% csrf_token %}
           <div class="form-group">
             <label for="exampleInputName1">First Name</label>
-            <input type="text" class="form-control" id="exampleInputName1" name="first_name" placeholder="Name" value="{{traffic_police.user.first_name}}">
+            <input type="text" class="form-control" id="exampleInputName1" name="first_name" placeholder="Name" value="{{traffic_police.user.username}}">
             <input type="hidden" name="traffic_police_id" value="{{traffic_police.id}}">
           </div>
           <div class="form-group">

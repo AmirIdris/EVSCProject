@@ -1,3 +1,4 @@
+from decimal import Context
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse_lazy
@@ -11,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.template import loader
 from .forms import CustomUserCreationForm, EditVehicleForm
 from EVSCapp.models import Vehicle,Records,Report,TrafficPolice,SystemAdmin,TrafficPoliceLocation
-from django.views.decorators.csrf import csrf_protect,requires_csrf_token
+from django.views.decorators.csrf import csrf_exempt, csrf_protect,requires_csrf_token
 
 # from pages.forms import AddTrafficPoliceForm
 from django.views.generic import ListView
@@ -19,6 +20,7 @@ from django.views.generic import ListView
 from django.db.models import Q
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from django.contrib.auth.decorators import user_passes_test
+from django.http import FileResponse
 
 import folium
 # Create your views here.
@@ -202,6 +204,12 @@ def add_user_save(request):
 
         
         password = User.objects.make_random_password()
+
+
+
+
+
+
         print(password)
         if is_traffic == "1":               
             user = User.objects.create(first_name = first_name, last_name = last_name, email = email, username =  usernam, is_staff = False)
@@ -379,7 +387,7 @@ def add_traffic_police_save(request):
                 messages.error(request, "Failed to save")
 
 def edit_traffic_police(request,traffic_police_id):
-    traffic = TrafficPolice.objects.get(id = traffic_police_id)
+    traffic_police = TrafficPolice.objects.get(id = traffic_police_id)
 
     traffic_police_location = TrafficPoliceLocation.objects.all()
 
@@ -395,7 +403,7 @@ def edit_traffic_police(request,traffic_police_id):
    
 
     context ={
-        'traffic':traffic,
+        'traffic_police':traffic_police,
         'id':traffic_police_id,
         'traffic_police_locations': location_found
     }
@@ -423,7 +431,7 @@ def edit_traffic_police_save(request):
         traffic_police_location = request.POST.get('traffic_police_location')
 
         try:
-            user = User.objects.get(traffic = id)
+            user = User.objects.get(traffic_police = id)
             print(user)
             user.username = username
             user.first_name = first_name
@@ -444,11 +452,11 @@ def edit_traffic_police_save(request):
             traffic.phone_number = phone_number
             print(traffic.phone_number)
             traffic.gender = gender
-            traffic_police_sites = TrafficPoliceLocation.objects.get(id = traffic_police_location)
+            traffic_police_sites = TrafficPoliceLocation.objects.get(pk = traffic_police_location)
 
             print(traffic_police_sites)
             traffic.location = traffic_police_sites
-            # print(traffic.location)
+            print(traffic.location)
             traffic.save(update_fields=['phone_number','gender','location'])
             messages.success(request, "Profile Updated successfully")
             # return redirect("edit_traffic_police", traffic_police_id = id )
@@ -541,6 +549,17 @@ def records_view(request):
         'records':records
     }
     return render(request, "view_records_template.html", context)
+
+
+def report_view(request):
+    report = Report.objects.all()
+    context = {
+        'reports':report
+    }
+
+    return render(request,'view_reports_template.html',context)
+
+
 
 
 # search all traffic police
@@ -779,6 +798,15 @@ def assign_traffic_location_save(request):
         traffic.save()
         messages.success(request,"profile is updated successfully")
         return redirect('assign_location_to_traffic')
+@csrf_exempt
+def check_username_exist(request):
+    username = request.POST.get("username")
+    user_obj = User.objects.filter(username=username).exists()
+    if user_obj:
+        return HttpResponse(True)
+    else:
+        return HttpResponse(False)
+
 
 
             
