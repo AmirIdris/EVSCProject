@@ -1,5 +1,5 @@
 from django.db import router
-from django.urls import path
+from django.urls import path,include
 from django.urls.conf import include
 from EVSCapp.EVSCApi.views import (RecordDetailAPIView,
                                     LisVehicle,
@@ -14,8 +14,9 @@ from EVSCapp.EVSCApi.views import (RecordDetailAPIView,
                                     ListUserDetail,
                                     RecordViewSet,
                                     # RecordList,
-                                    list_records,
-                                    ListNotification
+                                    # list_records,
+                                    ListNotification,
+                                    RecordList
 
                                    
                                     )
@@ -33,7 +34,9 @@ urlpatterns = [
     # path("",include(router.urls)),
     path("",include(router.urls)),
     path('rest-auth/',include("rest_auth.urls")),
-    path('records/',list_records,name='list-rcords'),
+    
+    # path('records/',list_records,name='list-rcords'),
+    path('records/',RecordList.as_view(),name = 'list-records'),
     path('records/<int:pk>/',RecordDetailAPIView.as_view(),name='list-detail'),
     path("records/<int:pk>/report/", qv.ReportCreateAPiView.as_view(),name='create-report'),
     path('vehicles/',LisVehicle.as_view(),name='list-vehicle'),

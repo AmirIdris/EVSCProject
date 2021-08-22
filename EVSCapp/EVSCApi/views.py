@@ -1,4 +1,6 @@
 from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
+from numpy import record
 # from TrafficReport.api.serializes import ReportSerializer
 from EVSCapp.models import Notification, Report,TrafficPolice,Vehicle,Records
 from rest_framework import generics, serializers,viewsets,status
@@ -44,12 +46,38 @@ class ListReport(generics.ListAPIView):
 #         serializer = RecordSerializer(records, many = True)
 #         return Response(serializer.data)
 
-@api_view(['GET','POST'])
-def list_records(request):
-    if request.method == 'GET':
-        records = Records.objects.all()
-        serializer = RecordSerializer(records, many = True)
-        return Response(serializer.data)
+# @api_view(['GET','POST'])
+# def list_records(request):
+#     if request.method == 'GET':
+#         records = Records.objects.all()
+#         serializer = RecordSerializer(records, many = True)
+#         return Response(serializer.data)
+
+
+
+
+class RecordList(generics.ListCreateAPIView):
+    """Create Records"""
+    queryset = Records.objects.all()
+    serializer_class = RecordSerializer
+
+    def get_queryset(self):
+        record = get_object_or_404(Records,status = False)
+        if get_object_or_404(Records,status = True):
+            return Records.objects.filter(status=False).order_by("-created_at")
+
+    def perform_create(self, serializer):
+        vehicle_plate = serializer.data['vehicle']
+        latitude = serializer.data['latitude']
+        longitude = serializer.data['longitude']
+        vehicle_speed = serializer.data['vehicle_speed']
+        address = serializer.data['address']
+        print(vehicle_plate)
+        print(latitude)
+        vehicle = Vehicle.objects.get(vehicle_plate = vehicle_plate)
+        print(vehicle)
+
+        serializer.save(vehicle = vehicle.id, latitude = latitude,longitude = longitude,vehicle_speed=vehicle_speed,address=address)
 
 
 
@@ -98,11 +126,44 @@ class ReportCreateAPiView(generics.ListCreateAPIView):
         print(kwarg_pk)
         record=get_object_or_404(Records,pk=kwarg_pk)
         print(record)
-        if Report.objects.filter(traffic_police=reported_by,records=record).exists():
+        print(reported_by.id)
+        traffic_police = TrafficPolice.objects.get(user_id = reported_by.id)
+        if Report.objects.filter(traffic_police=traffic_police,records=record).exists():
             raise ValidationError("You have already reported")
-        else: 
-            serializer.save(records=record,traffic_police=reported_by)
 
+        elif Report.objects.filter(records = record).exists():
+            raise ValidationError("Record is already reported")
+
+        else:
+            if record.status == False and record.id == record.id:
+                record.status=True
+                record.save(update_fields=['status'])
+
+            
+            
+            print(record.status) 
+            serializer.save(records=record,traffic_police=traffic_police)
+
+
+# class ReportCreateAPiView(APIView):
+#     serializer_class = RecordSerializer
+#     def get_queryset(self):
+#         queryset = Records.objects.all()
+#         return queryset
+
+#     def get(self,request, *args,**kwagrs):
+#         try:    
+#             id = self.kwargs.get("pk")
+#             print(id)
+#             if id != None:
+#                 record=Records.objects.get(pk=id)
+#                 serializer = RecordSerializer(record)
+                
+#         except:
+#             records = self.get_queryset()
+#             print(records)
+#             serializer = RecordSerializer(records,many=True)
+#             return Response(serializer.data)  
 
         
 class ReportRUDAPIView(generics.RetrieveUpdateDestroyAPIView):

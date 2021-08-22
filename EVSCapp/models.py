@@ -101,8 +101,8 @@ class Notification(models.Model):
 class Report(models.Model):
     """Model definition for Report."""
     description=models.TextField()
-    records=models.OneToOneField(Records,on_delete=models.CASCADE,related_name="report")
-    traffic_police=models.OneToOneField(TrafficPolice,on_delete=models.CASCADE)
+    records=models.ForeignKey(Records,on_delete=models.CASCADE,related_name="report")
+    traffic_police=models.ForeignKey(TrafficPolice,on_delete=models.CASCADE)
     created_at=models.DateTimeField(auto_now_add=True)
 
 
