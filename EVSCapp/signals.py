@@ -79,23 +79,23 @@ def send_notification(sender,instance,created,**kwargs):
         notification = Notification.objects.create(recipient = nearby_traffic_police, records = instance, content = "message_body")
         notification.save()
 
-        push_service = FCMNotification(api_key = 'AAAAbG5wAg0:APA91bH60qfGn4rg2B-2bSWicLWShygvmNrlrSX0LM9VzM9Srqcxvo3XIX9ODSrk92Zhuk4kPQ10V5DCRVVzDXN7koQSSP7S8aQhtRZQEULS10nL57k_Ote3AQzcolVRcuCnV8NgcGdw')
-        # registration_id = TrafficPolice.objects.values_list('fcm_token',flat=True).get(user= nearby_traffic_police.id)
-        registration_id = nearby_traffic_police.fcm_token
-        print(registration_id)
-        message_title = 'Notification test'
-        message_body = "Hi Aman, We made it bro!"
-        result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
+        # push_service = FCMNotification(api_key = 'AAAAbG5wAg0:APA91bH60qfGn4rg2B-2bSWicLWShygvmNrlrSX0LM9VzM9Srqcxvo3XIX9ODSrk92Zhuk4kPQ10V5DCRVVzDXN7koQSSP7S8aQhtRZQEULS10nL57k_Ote3AQzcolVRcuCnV8NgcGdw')
+        # # registration_id = TrafficPolice.objects.values_list('fcm_token',flat=True).get(user= nearby_traffic_police.id)
+        # registration_id = nearby_traffic_police.fcm_token
+        # print(registration_id)
+        # message_title = 'Notification test'
+        # message_body = "Hi Aman, We made it bro!"
+        # result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
 
         
 
 
 
         
-        print(result)
+        # print(result)
         
-@receiver(post_save,sender = Report)
-def notificatio(post_save, instance, created, **kwargs):
-    if created:
-        Notification.objects.create()
+# @receiver(post_save,sender = Report)
+# def notificatio(post_save, instance, created, **kwargs):
+#     if created:
+#         Notification.objects.create()
         

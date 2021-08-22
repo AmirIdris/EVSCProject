@@ -258,17 +258,21 @@ def add_user_save(request):
         # return redirect("to")
 def detail_info_view(request,traffic_id):
     traffic = TrafficPolice.objects.get(id = traffic_id)
-    traffic_police_location = TrafficPoliceLocation.objects.all()
+    locations = TrafficPoliceLocation.objects.all()
 
     location_found = []
     location_not_found = []
 
-    for traffic in traffic_police_location:
-
-        if TrafficPolice.objects.filter(location = traffic.pk).exists() and TrafficPolice.objects.get(pk = traffic_id):
-            location_found.append(traffic)
+    for location in locations:
+        if TrafficPolice.objects.filter(location = location.id).exists():
+            location_found.append(location)
         else:
-            location_not_found.append(traffic)
+            print(location)
+            location_not_found.append(location)
+
+
+
+
  
     context = {
         'traffic' : traffic,
@@ -299,11 +303,12 @@ def detail_info_view_save(request):
             traffic.phone_number = phone_number
             print(traffic.phone_number)
             traffic.gender = gender
-            traffic_police_sites = TrafficPoliceLocation.objects.get(id = traffic_police_location)
+            print(traffic_police_location)
+            traffic_police_sites = TrafficPoliceLocation.objects.get(pk = traffic_police_location)
 
             print(traffic_police_sites)
             traffic.location = traffic_police_sites
-            # print(traffic.location)
+            print(traffic.location)
             traffic.save(update_fields=['phone_number','gender','location'])
             messages.success(request, "Information is sent to the database successfully")
             # return redirect("edit_traffic_police", traffic_police_id = id )
@@ -588,15 +593,12 @@ def view_record_location_on_map(request, location_id):
 
     record = Records.objects.get(id = location_id)
     traffic_police_location = TrafficPoliceLocation.objects.all()
-    latitude = record.latitude
-    longitude = record.longitude
+    record_latitude = record.latitude
+    record_longitude = record.longitude
 
-    map = folium.Map(location = [float(latitude), float(longitude)],zoom_start = 13)
-    folium.Marker(location = [float(latitude),float(longitude)],
-    tooltip = 'click for more',
-    popup='Vehicle Plate is:'+ str(record.vehicle.vehicle_plate),
-    icon = folium.Icon(color = 'red', icon = 'info-sign')
-    ).add_to(map)
+    map = folium.Map(location = [float(record_latitude), float(record_longitude)],zoom_start = 9)
+
+
 
     for traffic_police_location in traffic_police_location:
         latitude = traffic_police_location.latitude
@@ -605,9 +607,19 @@ def view_record_location_on_map(request, location_id):
         # print(traffic)
         folium.Marker(location = [float(latitude),float(longitude)],
         tooltip = 'click for more',
-        popup='Traffic Name is:' + traffic_police_location.location_name,
+        popup='Located in :' + traffic_police_location.location_name,
         icon = folium.Icon(color = 'blue', icon = 'info-sign')
         ).add_to(map)
+    if record.status == False:
+        record_status = "Not yet Reported"
+
+    else:
+        record_status = "Record is reported"
+    folium.Marker(location = [float(record_latitude),float(record_longitude)],
+    tooltip = 'click for more',
+    popup='Vehicle Plate is:'+ str(record.vehicle.vehicle_plate + "\n" + 'Vehicle speed is :' + str(record.vehicle_speed) + "\n" + "Report status: " + record_status),
+    icon = folium.Icon(color = 'red', icon = 'info-sign')
+    ).add_to(map)
 
     folium.raster_layers.TileLayer('Stamen Terrain').add_to(map)
     folium.raster_layers.TileLayer('Stamen Toner').add_to(map)

@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from EVSCapp.models import Notification, Report,Vehicle,TrafficPolice,Records
 from django.conf import settings
 from django.db.models import fields
@@ -5,7 +6,8 @@ from rest_auth.models import TokenModel
 from rest_auth.utils import import_callable
 from rest_auth.serializers import UserDetailsSerializer as DefaultUserDetailsSerializer
 from rest_framework import serializers
-from rest_framework.fields import Field,ReadOnlyField,DecimalField
+from rest_framework.fields import BooleanField, CharField, Field, IntegerField,ReadOnlyField,DecimalField
+from django.utils import timezone
 
 
 
@@ -21,10 +23,30 @@ class VehicleSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class RecordSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Records
-        fields=['vehicle','latitude','longitude','vehicle_speed','address']
+# class RecordSerializer(serializers.ModelSerializer):
+#     status = serializers.ReadOnlyField()
+#     class Meta:
+#         model=Records
+#         fields=['id','vehicle','latitude','longitude','vehicle_speed','address','status']
+
+class RecordSerializer(serializers.Serializer):
+    pk = serializers.ReadOnlyField()
+    vehicle = serializers.CharField(max_length=15)
+    latitude = serializers.DecimalField(max_digits=9, decimal_places=6)
+    longitude = serializers.DecimalField(max_digits=9, decimal_places=6)
+    vehicle_speed = serializers.IntegerField()
+    status = serializers.BooleanField(read_only=True)
+    address = serializers.CharField(max_length = 50)
+    created_at=serializers.SerializerMethodField(read_only=True)
+
+    def create(self,validated_data):
+        # vehicle = Vehicle.objects.filter(vehicle_plate__iexact = validated_data['vehicle'])
+        vehicle = Vehicle.objects.get(vehicle_plate = validated_data['vehicle'])
+        obj=Records.objects.create(address = validated_data['address'],vehicle_speed=validated_data['vehicle_speed'],vehicle=vehicle,latitude = validated_data['latitude'],longitude = validated_data['longitude'],duration = timezone.now())
+        return obj
+
+    def get_created_at(self,instance):
+        return instance.created_at.strftime("%B %d %Y")
 
 # class RecordSerializer(serializers.ModelSerializer):
 #     created_at=serializers.SerializerMethodField(read_only=True)
@@ -46,24 +68,24 @@ class RecordSerializer(serializers.ModelSerializer):
 #     def get_created_at(self,instance):
 #         return instance.created_at.strftime("%B %d %Y")
 
-class ReportSerializer(serializers.ModelSerializer):
+# class ReportSerializer(serializers.ModelSerializer):
     
-    created_at=serializers.SerializerMethodField(read_only=True)
+#     created_at=serializers.SerializerMethodField(read_only=True)
 
 
-    class Meta:
-        model = Report
-        exclude = ["records","traffic_police"]
+#     class Meta:
+#         model = Report
+#         exclude = ["records","traffic_police"]
 
-    def get_created_at(self,instance):
-        return instance.created_at.strftime("%B %d %Y")
+#     def get_created_at(self,instance):
+#         return instance.created_at.strftime("%B %d %Y")
 
-    def get_traffic_police_has_reported(self,instance):
-        request = self.context.get("request")
-        return instance.traffic_police.filter(pk=request.user.pk).exists()
+#     def get_traffic_police_has_reported(self,instance):
+#         request = self.context.get("request")
+#         return instance.traffic_police.filter(pk=request.user.pk).exists()
 
-    def create(self, validated_data):
-        return Report.objects.create(**validated_data)
+#     def create(self, validated_data):
+#         return Report.objects.create(**validated_data)
 
 
 
@@ -148,18 +170,19 @@ class NotificationSerializer(serializers.Serializer):
 
 class ReportSerializer(serializers.ModelSerializer):
     # author=serializers.StringRelatedField(read_only=True)
-    # created_at=serializers.SerializerMethodField(read_only = False)
+    created_at=serializers.SerializerMethodField(read_only = False)
     # user_has_reported=serializers.SerializerMethodField(read_only=True)
 
     # reports=serializers.StringRelatedField(many=True)
 
     class Meta:
         model=Report
-        fields = ('description','records','traffic_police','created_at')
+        # fields = ('description','records','traffic_police','created_at')
+        exclude =["records","traffic_police"]
         
 
-    # def get_created_at(self,instance):
-    #     return instance.created_at.strftime("%B %d %Y")
+    def get_created_at(self,instance):
+        return instance.created_at.strftime("%B %d %Y")
 
     # def get_user_has_reported(self,instance):
     #     request=self.context.get("request")
