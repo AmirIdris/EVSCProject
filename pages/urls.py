@@ -33,7 +33,9 @@ from pages.views import (index,
                         view_location_on_map,
                         data_visualizatio,
                         assign_traffic_location,
-                        assign_traffic_location_save
+                        assign_traffic_location_save,
+                        check_username_exist,
+                        report_view
 
                         )
 
@@ -69,10 +71,13 @@ urlpatterns = [
     
     path('add_user/',add_user, name = 'add_user'),
     path('add_user_save', add_user_save, name = 'add_user_save'),
+    path('check_username_exist', check_username_exist, name = 'check_username_exist'),
     
     #record related urls
     path('view_records/',records_view, name = 'view_records'),
+    path('view_reports/',report_view, name = 'view_reports'),
     path('view_record_on_map/<location_id>',view_record_location_on_map, name = 'view_record_on_map'),
+    
 
     #location related urls
     path('manage_location/',manage_location, name = 'manage_location'),

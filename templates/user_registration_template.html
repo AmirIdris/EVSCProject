@@ -32,7 +32,7 @@
         </nav>
       </div>
         <!--end of Registration Form-->
-<div class="col-12 grid-margin stretch-card">
+<div class="col-12 grid-margin stretch-card mx-auto">
           <div class="card">
             <div class="card-body">
               <h4 class="card-title">Basic User elements</h4>
@@ -81,7 +81,7 @@
                 </div>
                 <div class="form-group">
                   <label for="exampleInputName1">Username</label>
-                  <input type="text" class="form-control" id="exampleInputName1" placeholder="Name" name="username" required>
+                  <input type="text" class="form-control" id="exampleInputName1" id = "username" placeholder="Name" name="username" required >
                 </div>
 
                 <div class="form-group">
@@ -142,6 +142,43 @@
       </div>
     </div>
 {% endblock content %}
+
+<!-- <script>
+  $(document).ready(function(){
+    $("#username").keyup(function(){
+                var username = $(this).val();
+                
+                if(username!=""){
+                    $.ajax({
+                        url : '{% url 'check_username_exist' %}',
+                        type : 'POST',
+                        data : {username:username}
+                    })
+                    .done(function(response){
+                        //console.log(response);
+
+                        if(response == "True"){
+                            $(".username_error").remove();
+                            $("<span class='username_error' style='color: red; padding: 5px; font-weight: bold;'> Username Not Available. </span>").insertAfter("#id_username")
+                        }
+                        else{
+                            $(".username_error").remove();
+                            $("<span class='username_error' style='color: green; padding: 5px; font-weight: bold;'> Username Available. </span>").insertAfter("#id_username")
+                        }
+                    })
+
+                    .fail(function(){
+                        console.log("Failed");
+                    })
+                }
+                else{
+                    $(".username_error").remove();
+                }
+                
+            })
+
+  });
+</script> -->
 
 <!-- Specific Plugin JS goes HERE  -->
 {% block plugin_javascripts %}
