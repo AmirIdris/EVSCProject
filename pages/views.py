@@ -1,4 +1,5 @@
 from decimal import Context
+from json import decoder
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse_lazy
@@ -639,6 +640,8 @@ def view_record_location_on_map(request, location_id):
     popup='Vehicle Plate is:'+ str(record.vehicle.vehicle_plate + "\n" + 'Vehicle speed is :' + str(record.vehicle_speed) + "\n" + "Report status: " + record_status),
     icon = folium.Icon(color = 'red', icon = 'info-sign')
     ).add_to(map)
+
+    
 
     folium.raster_layers.TileLayer('Stamen Terrain').add_to(map)
     folium.raster_layers.TileLayer('Stamen Toner').add_to(map)
