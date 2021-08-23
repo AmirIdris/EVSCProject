@@ -1,5 +1,4 @@
 from decimal import Context
-from json import decoder
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse_lazy
@@ -616,7 +615,7 @@ def view_record_location_on_map(request, location_id):
     record_latitude = record.latitude
     record_longitude = record.longitude
 
-    map = folium.Map(location = [float(record_latitude), float(record_longitude)],zoom_start = 9)
+    map = folium.Map(location = [float(record_latitude), float(record_longitude)],zoom_start = 10)
 
 
 

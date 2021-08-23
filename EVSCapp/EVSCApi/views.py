@@ -1,3 +1,4 @@
+from functools import partial
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from numpy import record
@@ -55,14 +56,15 @@ class ListReport(generics.ListAPIView):
 
 
 
-
+# list record and create new records 
 class RecordList(generics.ListCreateAPIView):
     """Create Records"""
+    # retrive all records
     queryset = Records.objects.all()
+    # change the format to Json
     serializer_class = RecordSerializer
 
     def get_queryset(self):
-        record = get_object_or_404(Records,status = False)
         if get_object_or_404(Records,status = True):
             return Records.objects.filter(status=False).order_by("-created_at")
 
@@ -80,16 +82,6 @@ class RecordList(generics.ListCreateAPIView):
         serializer.save(vehicle = vehicle.id, latitude = latitude,longitude = longitude,vehicle_speed=vehicle_speed,address=address)
 
 
-
-
-
-
-# List User Detail View 
-# class ListDetailRecordAPiView(generics.RetrieveAPIView):
-#     queryset=Records.objects.all()
-#     lookup_field = "slug"
-#     serializer_class=RecordSerializer
-    
 
 class RecordViewSet(viewsets.ModelViewSet):
     queryset=Records.objects.all()
@@ -115,7 +107,7 @@ class RecordDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset=Report.objects.all()
     serializer_class=RecordSerializer
     
-class ReportCreateAPiView(generics.ListCreateAPIView):
+class ReportCreateAPiView(generics.CreateAPIView):
     queryset=Report.objects.all()
     serializer_class=ReportSerializer
 
@@ -145,26 +137,6 @@ class ReportCreateAPiView(generics.ListCreateAPIView):
             serializer.save(records=record,traffic_police=traffic_police)
 
 
-# class ReportCreateAPiView(APIView):
-#     serializer_class = RecordSerializer
-#     def get_queryset(self):
-#         queryset = Records.objects.all()
-#         return queryset
-
-#     def get(self,request, *args,**kwagrs):
-#         try:    
-#             id = self.kwargs.get("pk")
-#             print(id)
-#             if id != None:
-#                 record=Records.objects.get(pk=id)
-#                 serializer = RecordSerializer(record)
-                
-#         except:
-#             records = self.get_queryset()
-#             print(records)
-#             serializer = RecordSerializer(records,many=True)
-#             return Response(serializer.data)  
-
         
 class ReportRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset=Report.objects.all()
@@ -186,37 +158,35 @@ class ListUser(generics.ListAPIView):
     queryset= User.objects.all()
     serializer_class=UserSerializer
 
+
 class ListUserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset=User.objects.all()
     serializer_class=UserSerializer
+
+    def update(self, request, *args, **kwargs):
+        serializer =UserSerializer(request.user, data = request.data,partial = True)
+        if request.data['password']!= '':
+            request.user.set_password(request.data['password'])
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        # if serializer.is_valid():
+            
+        #     user.set_password(serializer.data.get("password"))
+        #     user.username = serializer.data.get('username')
+        #     user.email = serializer.data.get('email')
+        #     user.first_name = serializer.data.get('first_name')
+        #     user.last_name = serializer.data.get('last_name')                 
+        #     user.save()
+        #     return Response("{'message':'instance is saved successfully'}")
+
+        # return Response("{'message':'something wrong'}")
 
 
 class ListNotification(generics.ListAPIView):
     queryset=Notification.objects.all()
     serializer_class=NotificationSerializer
-
-
- 
-
-
-    
-# @api_view(['GET', 'PUT'])
-# def fcm_token_detail(request,pk):
-#     try:
-#         fcm_token = TrafficPolice.objects.get(pk = pk)
-#     except TrafficPolice.DoesNotExist:
-#           return JsonResponse({'message': 'The token does not exist'}, status=status.HTTP_404_NOT_FOUND)
-#     if request.method == 'GET':
-#         fcm_token_detail_serializer =  FcmDevicesSerializer(fcm_token)  
-#         return JsonResponse(fcm_token_detail_serializer.data)
-#     elif request.method ==  'PUT':
-#         fcm_token_data = JSONParser().parse(request)
-#         fcm_token_detail_serializer = FcmDevicesSerializer(fcm_token, data = fcm_token_data, partial = True)
-
-#         if fcm_token_detail_serializer.is_valid():
-#             fcm_token_detail_serializer.save()
-#             return JsonResponse(fcm_token_detail_serializer.data)
-#         return JsonResponse(fcm_token_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
         
@@ -243,78 +213,5 @@ class UpdateFcmTokenApiView(generics.RetrieveUpdateAPIView):
             return Response("{'message':'instance is saved successfully'}")
 
         return Response("{'message':'something wrong'}")
-
-
-
-
-
-# Store Deices Fcm token in the database
-
-# class CreateFcmToken(APIView):
-#     def post(self,request,format = None):
-#         serializer = FcmDevicesSerializer(data = request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status = status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-
-# class CreateFcmTokenAPIView(generics.CreateAPIView):
-#     """
-#      Create New Fcm Token
-#     """
-#     queryset=TrafficPolice.objects.all()
-#     serializer_class=FcmDevicesSerializer
-
-#     def perform_update(self,serializer):
-#         if serializer.is_valid():
-#             user=serializer.validated_data['user']
-#             fcm_token=serializer.validated_data['fcm_token']
-
-#             if TrafficPolice.objects.filter(user = user,fcm_token = fcm_token).exists():
-#                 raise ValidationError("Token is Already created and associated to the corresponding user")
-#             else:
-#                 serializer.save(user = user,fcm_token = fcm_token)
-
-
-# class UpdateFcmTokenApiView(generics.RetrieveUpdateAPIView):
-#     queryset=TrafficPolice.objects.all()
-#     serializer_class = FcmDevicesSerializer
-#     lookup_field = 'pk'
-
-
-#     def get_object(self,pk):
-#         return TrafficPolice.objects.get(pk = pk)
-
-#     def patch(self, request, pk):
-#         traffic_police_object=self.get_object(pk)
-#         serializer=FcmDevicesSerializer(traffic_police_object,data = request.data, partial = True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response("{'message':'instance is updated successfully'}")
-#         return Response("{'message': 'instance is not updated'}")
-
-
-
-
-
-    # def update(self, request, *args ,**kwargs):
-    #     instance = self.get_object()
-    #     serializer = self.get_serializer(instance, data = request.data, partial = True)
-
-    #     user = data['user']
-        
-    #     traffic_police = TrafficPolice.objects.filter(user = user)
-
-    #     if traffic_police.exists():
-    #         if serializer.is_valid():
-    #             serializer.save()
-    #             return Response("{ 'message' : 'fcm_token is updated successfully'}")
-
-    #         else:
-    #             return Response("{'message':'something went wrong'}")
-
-    #     else:
-    #         return Response("{'message':'No user found'}")
-
 
         
