@@ -103,7 +103,15 @@ class Report(models.Model):
     description=models.TextField()
     records=models.ForeignKey(Records,on_delete=models.CASCADE,related_name="report")
     traffic_police=models.ForeignKey(TrafficPolice,on_delete=models.CASCADE)
+    is_drunk = models.BooleanField("Drunk",default=False)
+    is_using_cell_phone = models.BooleanField("Using CellPhone",default=False)
+    is_not_having_license = models.BooleanField("Does Not Have license",default=False)
+    is_chewing_chat = models.BooleanField("Chewing Chat",default=False)
+    other_violation = models.CharField(null=True,max_length=100)
+    payment_amount = models.DecimalField(null=True,max_digits=9, decimal_places=6)
+    short_summary = models.TextField(null=True)
     created_at=models.DateTimeField(auto_now_add=True)
+
 
 
 

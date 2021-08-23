@@ -615,7 +615,7 @@ def view_record_location_on_map(request, location_id):
     record_latitude = record.latitude
     record_longitude = record.longitude
 
-    map = folium.Map(location = [float(record_latitude), float(record_longitude)],zoom_start = 9)
+    map = folium.Map(location = [float(record_latitude), float(record_longitude)],zoom_start = 10)
 
 
 
@@ -639,6 +639,8 @@ def view_record_location_on_map(request, location_id):
     popup='Vehicle Plate is:'+ str(record.vehicle.vehicle_plate + "\n" + 'Vehicle speed is :' + str(record.vehicle_speed) + "\n" + "Report status: " + record_status),
     icon = folium.Icon(color = 'red', icon = 'info-sign')
     ).add_to(map)
+
+    
 
     folium.raster_layers.TileLayer('Stamen Terrain').add_to(map)
     folium.raster_layers.TileLayer('Stamen Toner').add_to(map)
