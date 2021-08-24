@@ -85,6 +85,8 @@ def send_notification(sender,instance,created,**kwargs):
         notification = Notification.objects.create(recipient = nearby_traffic_police, records = instance, content = "message_body")
         notification.save()
 
+        print(instance.vehicle.vehicle_plate)
+
         push_service = FCMNotification(api_key = 'AAAAbG5wAg0:APA91bH60qfGn4rg2B-2bSWicLWShygvmNrlrSX0LM9VzM9Srqcxvo3XIX9ODSrk92Zhuk4kPQ10V5DCRVVzDXN7koQSSP7S8aQhtRZQEULS10nL57k_Ote3AQzcolVRcuCnV8NgcGdw')
         # registration_id = TrafficPolice.objects.values_list('fcm_token',flat=True).get(user= nearby_traffic_police.id)
         registration_id = nearby_traffic_police.fcm_token

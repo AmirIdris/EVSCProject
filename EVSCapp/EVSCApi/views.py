@@ -117,6 +117,7 @@ class ReportCreateAPiView(generics.CreateAPIView):
             if record.status == False and record.id == record.id:
                 record.status=True
                 record.save(update_fields=['status'])
+            
 
             
             

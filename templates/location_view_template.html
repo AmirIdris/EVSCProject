@@ -22,6 +22,32 @@
         <a class="btn btn-primary" style="width: 50%; margin-top: 50px; margin-left: 20px;" href="{% url 'add_location' %}" role="button">+ Add Location</a> <br/>&nbsp;
       <div class="card-body">
         <h4 class="card-title">EVSC system Staffs</h4>
+
+
+        {% if messages %}
+        <div class="form-group">
+        <div class="col-12">
+            {% for message in messages %}
+            {% if message.tags == "error" %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+            {% elif message.tags == "success" %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        </div>
+        {% endif %}
+        
         
         </p>
         <div class="table-responsive">
@@ -30,22 +56,58 @@
               <tr>
                 
                 <th>Location Name</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
+                <th>Traffic Police</th>
+                
                 
               </tr>
             </thead>
             <tbody>
               {% for location in locations  %}
-              <tr>
-                <td>{{location.location_name}}</td>
-                <td>{{location.latitude}}</td>
-                <td>{{location.longitude}}</td>
-                <td>
-                  <a href="{% url 'view_location_on_map' location.id %}" class="text-success"><i class="mdi mdi-google-maps"></i></a>                          
-                </td>
+              
+                {% for traffic in traffics %}
+                    
+               {% if traffic.location_id == location.id %}
+                  <tr>
+                      
+                      <td>{{location.location_name}}</td>
+                      <td>{{traffic.user.first_name}}</td>
+                      <td>
+                        <form action=" {% url 'remove_location_to_traffic' traffic.id %} " method="get">
+                        <div class="form-check" style="display: inline-block; margin-right: 30px;">
+                          <label class="form-check-label">
+                            <input type="radio" class="form-check-input text-danger" name="membershipRadios" id="membershipRadios1"  value="1" >Remove Assignment </label>
+                        </div>
+                        
+                        <div style="display: inline-block; margin-left: 20px;">
+                          <button type="submit" class="btn btn-inverse-success btn-fw">Apply</button>
+                        </div>
+
+                        <div style="display: inline-block; margin-left: 20px;">
+                          <a href="{% url 'view_location_on_map' location.id %}" class="text-success" style="margin-left: 15px;"><i class="mdi mdi-google-maps"></i></a>
+                        </div>   
+
+                      </form>
+
+                        
+
+                        
+                        
+      
+                      </td>
+
+                      <td></td>
+                    
+                  </tr>
+                 
+               {% endif %}
+                 
                 
-              </tr>
+              {% endfor %}
+                
+
+              
+                
+
               {% endfor %}
             </tbody>
           </table>
