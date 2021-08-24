@@ -686,9 +686,12 @@ def view_record_location_on_map(request, location_id):
 #Location related Views
 def manage_location(request):
     location = TrafficPoliceLocation.objects.all()
+    traffic = TrafficPolice.objects.all()
     context = {
-        "locations" : location
+        "locations" : location,
+        "traffics" : traffic
     }
+    print(context)
 
     return render(request, "location_view_template.html",context)
 
@@ -824,6 +827,19 @@ def assign_traffic_location_save(request):
         traffic.save()
         messages.success(request,"profile is updated successfully")
         return redirect('assign_location_to_traffic')
+
+def remove_traffic_location_assignment(request,traffic_id):
+    is_selected = request.GET.get('membershipRadios')
+    if is_selected == "1":
+        traffic_police = TrafficPolice.objects.get(pk = traffic_id)
+        traffic_police.location = None
+        traffic_police.save(update_fields = ['location'])
+        messages.success(request,'Traffic policeis no more belongs to this location')
+
+    return redirect('manage_location')
+
+    
+
 @csrf_exempt
 def check_username_exist(request):
     username = request.POST.get("username")

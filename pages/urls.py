@@ -36,7 +36,8 @@ from pages.views import (index,
                         assign_traffic_location_save,
                         check_username_exist,
                         report_view,
-                        generate_password
+                        generate_password,
+                        remove_traffic_location_assignment
 
                         )
 
@@ -88,6 +89,7 @@ urlpatterns = [
     path('add_location_save',add_location_save_view, name = 'add_location_save'),
     path('assign_location_to_traffic/',assign_traffic_location, name = 'assign_location_to_traffic'),
     path('assign_location_to_traffic_save',assign_traffic_location_save, name = 'assign_location_to_traffic_save'),
+    path('remove_location_to_traffic/<traffic_id>',remove_traffic_location_assignment,name = 'remove_location_to_traffic'),
 
     # pages urls
     path('data_visualization/',data_visualizatio, name = 'visualize_data'),
