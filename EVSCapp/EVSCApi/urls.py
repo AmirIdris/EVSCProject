@@ -16,7 +16,8 @@ from EVSCapp.EVSCApi.views import (RecordDetailAPIView,
                                     # RecordList,
                                     # list_records,
                                     ListNotification,
-                                    RecordList
+                                    RecordList,
+                                    ChangePasswordView
 
                                    
                                     )
@@ -48,6 +49,7 @@ urlpatterns = [
     path('user-profile/',MyProfileLoadAPIView.as_view(),name ='retriev-user-profile'),
     path('users/',ListUser.as_view(), name ='users'),
     path('users/<int:pk>',ListUserDetail.as_view(), name = 'user-detail'),
+    path('change-password/',ChangePasswordView.as_view(),name = 'change-password'),
     path('notification/',ListNotification.as_view(),name='notifications')
     # path('devices/<int:pk>',fcm_token_detail,name='create-device-token')
     # path('records/<int:pk>/report',ReportCreateAPiView.as_view(),name='create-record')

@@ -77,40 +77,6 @@ class UserProfileSerializer(serializers.Serializer):
     longitude = DecimalField(source = "traffic_police.user.longitude", max_digits=9, decimal_places=6)
 
 
-# class UserSerializer(serializers.ModelSerializer):
-#     # id = serializers.ReadOnlyField()
-#     # username = serializers.CharField(max_length=50)
-#     # email = serializers.EmailField()
-#     # first_name = serializers.CharField(max_length=50)
-#     # last_name = serializers.CharField(max_length=50)
-    
-#     class Meta:
-#         model = User
-#         fields = ('id','username','email','password','first_name','last_name')
-
-
-
-    # def update(self, instance, validated_data):
-    #     request = self.context.get('request',None)
-    #     traffic_police = get_object_or_404(TrafficPolice, user_id = request.user.id)
-    #     print(validated_data.get('username', instance.username))
-    #     instance.username = validated_data.get('username', instance.username)
-    #     instance.password = validated_data.get('password', instance.password)
-    #     instance.email = validated_data.get('email', instance.email)
-    #     instance.first_name = validated_data.get('first_name', instance.first_name)
-    #     instance.last_name = validated_data.get('last_name', instance.last_name)
-    
-    #     return instance
-
-
-
-
-# class RecordSerializer(serializers.Serializer):
-#     # records=serializers.SerializerMethodField(read_only=False)
-#     id = ReadOnlyField()
-#     recipient = ReadOnlyField(source = "traffic_police_notification.recipient")
-#     records = ReadOnlyField(source = "record_notification.vehicle.plate_number")
-
 
 
 
@@ -148,28 +114,6 @@ class ReportSerializer(serializers.ModelSerializer):
     def get_created_at(self,instance):
         return instance.created_at.strftime("%B %d %Y")
 
-    # def get_user_has_reported(self,instance):
-    #     request=self.context.get("request")
-
-    #     return instance.traffic_police.filter(pk=request.user.pk).exists()
-
-    # def create(self,validated_data):
-    #     reports_record=RecordSerializer.create(RecordSerializer(),validated_data)
-    #     reports,created=Records.objects.create(records=reports_record)
-    #     return reports
-
-
-# class MobileDeviceSerializer(serializers.ModelSerializer):
-#     """Serializer For MobileDevice Identification"""
-#     class Meta:
-#         model=MobileDevices
-#         fields=('participants','token')
-
-
-#     def create(self,validated_data):
-#         """ Creating MobileDeice instances """
-#         return MobileDevices.objects.create(**validated_data)
-
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model=TrafficPolice
@@ -206,3 +150,13 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 
+class ChangePasswordSerializer(serializers.Serializer):
+    model = User
+
+    """
+      Serializer for password change endpoint.
+
+    """
+    old_password = serializers.CharField(required = True)
+    new_password = serializers.CharField(required = True)
+    
