@@ -1,3 +1,4 @@
+
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from EVSCapp import models
@@ -25,13 +26,6 @@ class VehicleSerializer(serializers.ModelSerializer):
         model=Vehicle
         fields = "__all__"
 
-
-# class RecordSerializer(serializers.ModelSerializer):
-#     status = serializers.ReadOnlyField()
-#     class Meta:
-#         model=Records
-#         fields=['id','vehicle','latitude','longitude','vehicle_speed','address','status']
-
 class RecordSerializer(serializers.Serializer):
     pk = serializers.ReadOnlyField()
     vehicle = serializers.CharField(max_length=15)
@@ -50,46 +44,6 @@ class RecordSerializer(serializers.Serializer):
 
     def get_created_at(self,instance):
         return instance.created_at.strftime("%B %d %Y")
-
-# class RecordSerializer(serializers.ModelSerializer):
-#     created_at=serializers.SerializerMethodField(read_only=True)
-#     latitude = serializers.CharField()
-#     longitude = serializers.CharField()
-#     # vehicle_plate = serializers.CharField(source = "vehicle.vehicle_plate")
-#     # location=PointField()
-#     class Meta:
-#         model=Records
-#         exclude=['duration','status']
-
-
-#     def create(self,validated_data):
-        
-        
-#         obj=Records.objects.create(address = validated_data['address'],vehicle_speed=validated_data['vehicle_speed'],vehicle=validated_data['vehicle'],latitude = validated_data['latitude'],longitude = validated_data['longitude'])
-#         return obj
-
-#     def get_created_at(self,instance):
-#         return instance.created_at.strftime("%B %d %Y")
-
-# class ReportSerializer(serializers.ModelSerializer):
-    
-#     created_at=serializers.SerializerMethodField(read_only=True)
-
-
-#     class Meta:
-#         model = Report
-#         exclude = ["records","traffic_police"]
-
-#     def get_created_at(self,instance):
-#         return instance.created_at.strftime("%B %d %Y")
-
-#     def get_traffic_police_has_reported(self,instance):
-#         request = self.context.get("request")
-#         return instance.traffic_police.filter(pk=request.user.pk).exists()
-
-#     def create(self, validated_data):
-#         return Report.objects.create(**validated_data)
-
 
 
 
@@ -123,16 +77,16 @@ class UserProfileSerializer(serializers.Serializer):
     longitude = DecimalField(source = "traffic_police.user.longitude", max_digits=9, decimal_places=6)
 
 
-class UserSerializer(serializers.ModelSerializer):
-    # id = serializers.ReadOnlyField()
-    # username = serializers.CharField(max_length=50)
-    # email = serializers.EmailField()
-    # first_name = serializers.CharField(max_length=50)
-    # last_name = serializers.CharField(max_length=50)
+# class UserSerializer(serializers.ModelSerializer):
+#     # id = serializers.ReadOnlyField()
+#     # username = serializers.CharField(max_length=50)
+#     # email = serializers.EmailField()
+#     # first_name = serializers.CharField(max_length=50)
+#     # last_name = serializers.CharField(max_length=50)
     
-    class Meta:
-        model = User
-        fields = ('id','username','email','password','first_name','last_name')
+#     class Meta:
+#         model = User
+#         fields = ('id','username','email','password','first_name','last_name')
 
 
 
@@ -215,4 +169,40 @@ class ReportSerializer(serializers.ModelSerializer):
 #     def create(self,validated_data):
 #         """ Creating MobileDeice instances """
 #         return MobileDevices.objects.create(**validated_data)
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TrafficPolice
+        fields =('phone_number',)
+
+class UserSerializer(serializers.ModelSerializer):
+    traffic_police = ProfileSerializer(required = True)
+
+    class Meta:
+        model = User
+        fields =('id','username','email','password','first_name','last_name','traffic_police')
+
+
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get('username',instance.username)
+        instance.email = validated_data.get('email',instance.email)
+        instance.first_name = validated_data.get('first_name',instance.first_name)
+        instance.last_name = validated_data.get('last_name',instance.last_name)
+        instance.username = validated_data.get('username',instance.username)
+        instance.username = validated_data.get('username',instance.username)
+        traffic_police = TrafficPolice.objects.get(user = instance)
+        print(traffic_police.phone_number)
+                
+        # instance.set_password(validated_data['password'])
+        instance.save()
+        traffic_polices = validated_data.pop('traffic_police')
+        phone_number = list(traffic_polices.items())
+        traffic_police.phone_number = phone_number[0][1]
+
+        traffic_police.save(update_fields=['phone_number'])
+        print(phone_number[0][1])
+        print(traffic_polices)       
+
+        return instance
+
 

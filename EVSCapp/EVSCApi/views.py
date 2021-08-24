@@ -1,5 +1,6 @@
 from functools import partial
 from django.core.exceptions import ValidationError
+from django.http import request
 from django.shortcuts import get_object_or_404
 from numpy import record
 # from TrafficReport.api.serializes import ReportSerializer
@@ -25,6 +26,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
 
 from EVSCapp import permissions
+from django.db.models import Q
 
 from rest_framework.decorators import api_view
  
@@ -155,21 +157,25 @@ class MyProfileLoadAPIView(APIView):
         return Response(serializer.data)
 
 class ListUser(generics.ListAPIView):
-    queryset= User.objects.all()
     serializer_class=UserSerializer
+
+    def get_queryset(self):
+        if get_object_or_404(User,pk = self.request.user.pk):
+            return User.objects.filter(Q(username__iexact=self.request.user.username))
 
 
 class ListUserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset=User.objects.all()
     serializer_class=UserSerializer
 
-    def update(self, request, *args, **kwargs):
-        serializer =UserSerializer(request.user, data = request.data,partial = True)
-        if request.data['password']!= '':
-            request.user.set_password(request.data['password'])
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        user = request.user
+        serializer =UserSerializer(user, data = request.data,partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # if serializer.is_valid():
             

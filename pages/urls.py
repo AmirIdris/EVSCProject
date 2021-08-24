@@ -35,7 +35,8 @@ from pages.views import (index,
                         assign_traffic_location,
                         assign_traffic_location_save,
                         check_username_exist,
-                        report_view
+                        report_view,
+                        generate_password
 
                         )
 
@@ -72,6 +73,7 @@ urlpatterns = [
     path('add_user/',add_user, name = 'add_user'),
     path('add_user_save', add_user_save, name = 'add_user_save'),
     path('check_username_exist', check_username_exist, name = 'check_username_exist'),
+    path('generate_credential', generate_password, name = 'generate_credential'),
     
     #record related urls
     path('view_records/',records_view, name = 'view_records'),
