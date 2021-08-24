@@ -3,13 +3,14 @@ from django.core.exceptions import ValidationError
 from django.http import request
 from django.shortcuts import get_object_or_404
 from numpy import record
+from rest_framework import response
 # from TrafficReport.api.serializes import ReportSerializer
 from EVSCapp.models import Notification, Report,TrafficPolice,Vehicle,Records
 from rest_framework import generics, serializers,viewsets,status
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import UpdateAPIView, get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from EVSCapp.EVSCApi.serializers import (VehicleSerializer,
+from EVSCapp.EVSCApi.serializers import (ChangePasswordSerializer, VehicleSerializer,
                                           RecordSerializer,
                                           ReportSerializer,
                                           FcmDevicesSerializer,
@@ -29,6 +30,7 @@ from EVSCapp import permissions
 from django.db.models import Q
 
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
  
 
 # List Available records .
@@ -39,23 +41,6 @@ class ListRecordAPiView(viewsets.ModelViewSet):
 class ListReport(generics.ListAPIView):
     queryset= Report.objects.all()
     serializer_class=ReportSerializer
-# List all available records
-# class RecordList(APIView):
-#     # queryset = Records.objects.all()
-#     # serializer_class = RecordSerializer
-
-#     def get(self,request, format = None):
-#         records = Records.objects.all()
-#         serializer = RecordSerializer(records, many = True)
-#         return Response(serializer.data)
-
-# @api_view(['GET','POST'])
-# def list_records(request):
-#     if request.method == 'GET':
-#         records = Records.objects.all()
-#         serializer = RecordSerializer(records, many = True)
-#         return Response(serializer.data)
-
 
 
 # list record and create new records 
@@ -177,18 +162,6 @@ class ListUserDetail(generics.RetrieveUpdateDestroyAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # if serializer.is_valid():
-            
-        #     user.set_password(serializer.data.get("password"))
-        #     user.username = serializer.data.get('username')
-        #     user.email = serializer.data.get('email')
-        #     user.first_name = serializer.data.get('first_name')
-        #     user.last_name = serializer.data.get('last_name')                 
-        #     user.save()
-        #     return Response("{'message':'instance is saved successfully'}")
-
-        # return Response("{'message':'something wrong'}")
-
 
 class ListNotification(generics.ListAPIView):
     queryset=Notification.objects.all()
@@ -220,4 +193,36 @@ class UpdateFcmTokenApiView(generics.RetrieveUpdateAPIView):
 
         return Response("{'message':'something wrong'}")
 
-        
+# password update Api logic resides in this method        
+class ChangePasswordView(UpdateAPIView):
+    serializer_class = ChangePasswordSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self,queryset = None):
+        obj = self.request.user
+        return obj
+
+    def update(self,request,*args,**kwargs):
+
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+
+            # Check old password
+            if not self.object.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+                # set_password also hashes the password that the user will get
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message':'password is updated successfully!',
+                'data':[]
+            }
+            return Response(response)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    
