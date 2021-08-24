@@ -33,13 +33,12 @@ class RecordSerializer(serializers.Serializer):
     longitude = serializers.DecimalField(max_digits=9, decimal_places=6)
     vehicle_speed = serializers.IntegerField()
     status = serializers.BooleanField(read_only=True)
-    address = serializers.CharField(max_length = 50)
     created_at=serializers.SerializerMethodField(read_only=True)
 
     def create(self,validated_data):
         # vehicle = Vehicle.objects.filter(vehicle_plate__iexact = validated_data['vehicle'])
         vehicle = Vehicle.objects.get(vehicle_plate = validated_data['vehicle'])
-        obj=Records.objects.create(address = validated_data['address'],vehicle_speed=validated_data['vehicle_speed'],vehicle=vehicle,latitude = validated_data['latitude'],longitude = validated_data['longitude'],duration = timezone.now())
+        obj=Records.objects.create(vehicle_speed=validated_data['vehicle_speed'],vehicle=vehicle,latitude = validated_data['latitude'],longitude = validated_data['longitude'],duration = timezone.now())
         return obj
 
     def get_created_at(self,instance):
