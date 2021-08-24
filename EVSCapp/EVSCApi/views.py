@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.http import request
 from django.shortcuts import get_object_or_404
 from numpy import record
+from numpy.core import records
 from rest_framework import response
 # from TrafficReport.api.serializes import ReportSerializer
 from EVSCapp.models import Notification, Report,TrafficPolice,Vehicle,Records
@@ -31,6 +32,8 @@ from django.db.models import Q
 
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
+
+
  
 
 # List Available records .
@@ -165,8 +168,11 @@ class ListUserDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ListNotification(generics.ListAPIView):
-    queryset=Notification.objects.all()
     serializer_class=NotificationSerializer
+    def get_queryset(self):
+        return Notification.objects.filter(Q(records__status = False))
+
+        
 
 
         

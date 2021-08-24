@@ -66,7 +66,7 @@ def send_notification(sender,instance,created,**kwargs):
                 list_of_distance.append((d, traffic_obj))            
 
             # minimum distance 
-            minimum_distance_pair = min(list_of_distance)
+            minimum_distance_pair = min(list_of_distance)    
             nearby_traffic_police = minimum_distance_pair[1]
             print(minimum_distance_pair[0], nearby_traffic_police)
             # minimum_distance = index(min(list_of_distance))

@@ -32,7 +32,6 @@ class Records(models.Model):
     vehicle=models.ForeignKey(Vehicle,on_delete=models.CASCADE,related_name="records")
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6,null=True)
-    address=models.CharField(max_length=50)
     vehicle_speed=models.IntegerField(null=True)
     duration=models.TimeField(null = True)
     status=models.BooleanField("is_reported",default=False)
