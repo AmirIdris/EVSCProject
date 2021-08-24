@@ -23,11 +23,11 @@
 
         <!--Registartion Form-->
        <div class="page-header">
-        <h3 class="page-title"> Register User to the System </h3>
+        <h3 class="page-title"> Fill Additional Traffic Police Informations </h3>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Users</a></li>
-            <li class="breadcrumb-item active" aria-current="page">User elements</li>
+            <li class="breadcrumb-item"><a href="#">Traffic Police </a></li>
+            <li class="breadcrumb-item active" aria-current="page">Traffic Police elements</li>
           </ol>
         </nav>
       </div>
@@ -74,14 +74,35 @@
                     <label>Assign Location to the Traffic Police</label>
         
                     <select name="traffic_police_location" class="js-example-basic-single" style="width:100%">
-                      {% for traffic_police_location in traffic_police_locations %}
-                      <option  value="{{traffic_police_location.id}}" 
-                      {% if traffic_police.location.id == traffic_police_location.id %}
-                        selected
+
+                      
+                      {% if traffic_police_locations|length == 0 %}
+
+                      <option  value="{{traffic_police.location.id}}" 
+                      selected
+                    
+                    >
+                    {{ traffic.location.location_name}}</option>
+
+
+
+
+                        
+                      {% else %}
+
+
+                        {% for traffic_police_location in traffic_police_locations %}
+                        <option  value="{{traffic_police_location.id}}" 
+                        {% if traffic.location.id == traffic_police_location.id %}
+                          selected
+                        {% endif %}
+                        >
+                        {{traffic_police_location.location_name}}</option>
+                        {% endfor %}
+
+
                       {% endif %}
-                      >
-                      {{traffic_police_location.location_name}}</option>
-                      {% endfor %}
+                        
         
                     </select>
          
@@ -103,30 +124,8 @@
                     <option value="F">Female</option>
                   </select>
                 </div>
-
-
-                <!-- <div class="form-group">
-                  <label for="exampleInputPassword4">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword4" placeholder="Password">
-                </div> -->
-                <!-- <div class="form-group">
-                  <label for="exampleSelectGender">Gender</label>
-                  <select class="form-control" id="exampleSelectGender">
-                    <option>Male</option>
-                    <option>Female</option>
-                  </select>
-                </div> -->
-
-                <!-- <div class="form-group">
-                  <label for="exampleInputCity1">City</label>
-                  <input type="text" class="form-control" id="exampleInputCity1" placeholder="Location">
-                </div>
-                <div class="form-group">
-                  <label for="exampleTextarea1">Textarea</label>
-                  <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
-                </div> -->
                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                <button class="btn btn-dark">Cancel</button>
+                <a href="{% url 'generate_credential' %}" class="btn btn-primary"> Generate Credential </a>
               </form>
             </div>
           </div>

@@ -1,6 +1,6 @@
 from decimal import Context
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, response
 from django.urls import reverse_lazy
 from django import template
 # from django.views.generic import TemplateView
@@ -21,8 +21,12 @@ from django.db.models import Q
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from django.contrib.auth.decorators import user_passes_test
 from django.http import FileResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
+
 
 import folium
+
 # Create your views here.
 
 # HomePage View 
@@ -204,10 +208,8 @@ def add_user_save(request):
 
         
         password = User.objects.make_random_password()
-
-
-
-
+        request.session['password'] = password
+        request.session['username'] = usernam
 
 
         print(password)
@@ -273,7 +275,7 @@ def detail_info_view(request,traffic_id):
 
     for location in locations:
         if TrafficPolice.objects.filter(location = location.id).exists():
-            location_found.append(location)
+            continue
         else:
             print(location)
             location_not_found.append(location)
@@ -290,6 +292,28 @@ def detail_info_view(request,traffic_id):
     }
 
     return render(request,"traffic_info_template.html", context)
+
+
+def generate_password(request):
+    # create HttpResponse objetcs
+    response = HttpResponse(content_type = 'application/pdf')
+    # This line force a download
+    response['Content-Disposition'] = 'attachment; filename="1.pdf"'
+
+    get_password = request.session.get('password')
+    get_username = request.session.get('username')
+
+    p = canvas.Canvas(response)
+
+    # Write content on the PDF 
+    p.drawString(100, 500, "Password is:  " + get_password + " Username is : " + get_username ) 
+
+    # Close the PDF object.
+    p.showPage()
+    p.save()
+
+    return response
+
 
 def detail_info_view_save(request):
 
@@ -320,7 +344,7 @@ def detail_info_view_save(request):
             traffic.save(update_fields=['phone_number','gender','location'])
             messages.success(request, "Information is sent to the database successfully")
             # return redirect("edit_traffic_police", traffic_police_id = id )
-            return redirect("manage_traffic_police")
+            return redirect("detail_info", traffic_id = id )
         except:
             messages.error(request,"Failed to store detail Information")
             return redirect("detail_info", traffic_id = id )
