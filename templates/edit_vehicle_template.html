@@ -19,27 +19,79 @@
 
 
 <div class="col-12 grid-margin stretch-card">
+
+
     <div class="card">
+
+
+
+      {% if messages %}
+      <div class="form-group">
+      <div class="col-12">
+          {% for message in messages %}
+          {% if message.tags == "error" %}
+              <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+          {% elif message.tags == "success" %}
+              <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+          {% endif %}
+          {% endfor %}
+         </div>
+       </div>
+       {% endif %}
+
+
+
+
+
+
+
+
       <div class="card-body">
         <h4 class="card-title">Basic form elements</h4>
         <p class="card-description"> Basic form elements </p>
-        <form method="POST" class="forms-sample" action=" {% url 'edit_traffic_police_save' %}  ">
+        <form method="POST" class="forms-sample needs-validation" action=" {% url 'edit_vehicle_save' %}  " novalidate>
           {% csrf_token %}
           <div class="form-group">
-            {{form.plate_number.errors}}
+            <input type="hidden" name="vehicle_id" value="{{vehicle.id}}">
             <label for="exampleInputName1">Plate Number</label>
-            {{form.plate_number}}
+            <input type="text" class="form-control" id="exampleInputName1" name="vehicle_plate" placeholder="Plate Number" value="{{vehicle.vehicle_plate}}" required>
+            <div class="invalid-feedback">
+              Please Write a Plate Number.
+            </div>
+
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+
           </div>
           <div class="form-group">
-            {{form.plate_type.errors}}
             <label for="exampleInputName1">Plate Type</label>
-            {{form.plate_type}}
+            <input type="text" class="form-control" id="exampleInputName1" name="vehicle_type" placeholder="Vehicle Type" value="{{vehicle.vehicle_type}}" required>
+            <div class="invalid-feedback">
+              Please Write a Plate Type.
+            </div>
           </div>
 
           <div class="form-group">
-            {{form.vehicle_owner.errors}}
+            
             <label for="exampleInputEmail3">Plate Owner</label>
-            {{form.vehicle_owner}}
+            <input type="text" class="form-control" id="exampleInputName1" name="vehicle_owner" placeholder="Vehicle Owner" value="{{vehicle.vehicle_owner}}" required>
+            <div class="invalid-feedback">
+              Please Write a Vehicle Owner.
+            </div>
+            <div class="valid-feedback">
+              Looks good!
+            </div>
           </div>
           <button type="submit" class="btn btn-primary mb-2">Submit</button>
 
@@ -61,6 +113,36 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+
+
+<script>
+
+  
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+
+</script>
+
+
+
 
   <script src="/static/assets/js/file-upload.js"></script>
   <script src="/static/assets/js/typeahead.js"></script>
