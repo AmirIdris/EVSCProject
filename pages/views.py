@@ -186,9 +186,12 @@ def delete_vehicle(request,vehicle_id):
     vehicle=Vehicle.objects.get(id=vehicle_id)
 
     try:
-        vehicle.delete()
-        messages.success(request, "Vehicle deleted successfuly")
-        return redirect('manage_vehicle')
+        if request.method == 'POST':
+            vehicle.delete()
+            messages.success(request, "Vehicle deleted successfuly")
+            return redirect('manage_vehicle')
+        return render(request,'delete_vehicle.html')
+
     except:
         messages.error(request, "unavle to delete vehicle")
 
@@ -506,9 +509,12 @@ def delete_traffic_police(request, traffic_police_id):
     traffic = TrafficPolice.objects.get(id = traffic_police_id)
 
     try:
-        traffic.delete()
-        messages.success(request, "successfully deleted")
-        return redirect('manage_traffic_police')
+
+        if request.method == 'POST':
+            traffic.delete()
+            messages.success(request, "successfully deleted")
+            return redirect('manage_traffic_police')
+        return render(request,'delete_items.html')
 
     except:
         messages.error(request, "unable to delete traffic police")
