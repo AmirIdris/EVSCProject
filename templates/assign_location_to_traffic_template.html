@@ -34,7 +34,7 @@
           <div class="card">
             <div class="card-body">
               <h4 class="card-title">Assign Location To Traffics</h4>
-              <form action="{% url 'assign_location_to_traffic_save' %}" method="post">
+              <form action="{% url 'assign_location_to_traffic_save' %}" method="post" class="needs-validation" novalidate>
                 {% csrf_token %}
 
                 {% comment %} Display Messages {% endcomment %}
@@ -65,12 +65,21 @@
               <div class="form-group">
                 <label>Select Traffic Polices</label>
                 <input type="hidden" name="id" value="{{none_assigned_traffic.id}}">
-                <select name="traffic" class="js-example-basic-single" style="width:100%" >
+                <select name="traffic" class="js-example-basic-single" style="width:100%" required >
                   {% for none_assigned_traffic in none_assigned_traffics %}
                   <option value="{{none_assigned_traffic.id}}">{{none_assigned_traffic.user.first_name}}</option>
                   {% endfor %}
                     
                 </select>
+
+                <div class="invalid-feedback">
+                  Please Select Traffic Police
+                </div>
+    
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+
               </div>
             </div>
 
@@ -78,13 +87,22 @@
             <div class="card-body">
               <div class="form-group">
                 <label>Slect Location</label>
-                <select class="js-example-basic-single" style="width:100%" name="location">
+                <select class="js-example-basic-single" style="width:100%" name="location" required>
                   
                   {% for free_location in free_locations %}
-                  <option value="{{free_location.id}}">{{free_location.location_name}}</option>
+                  <option value="{{free_location.id}}" >{{free_location.location_name}}</option>
                     
                   {% endfor %}
                 </select>
+
+                <div class="invalid-feedback">
+                  Please Select Location
+                </div>
+    
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+
               </div>
             </div>
 
@@ -112,6 +130,34 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+
+
+<script>
+
+  
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+  (function () {
+    'use strict'
+  
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.needs-validation')
+  
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+  
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+  
+  </script>
+ 
 
   <script src="/static/assets/js/file-upload.js"></script>
   <script src="/static/assets/js/typeahead.js"></script>

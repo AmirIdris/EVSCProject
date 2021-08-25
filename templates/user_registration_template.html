@@ -37,7 +37,7 @@
             <div class="card-body">
               <h4 class="card-title">Basic User elements</h4>
               <p class="card-description"> Fill form elements </p>
-              <form role="form" class="forms-sample" method="POST", action="{% url 'add_user_save' %}">
+              <form role="form" class="forms-sample needs-validation" method="POST", action="{% url 'add_user_save' %}" novalidate>
 
                  {% csrf_token %}
 
@@ -73,20 +73,54 @@
                 <div class="form-group">
                   <label for="exampleInputName1">First Name</label>
                   <input type="text" class="form-control" id="exampleInputName1" placeholder="Name" name = "first_name" required>
+
+                  <div class="invalid-feedback">
+                    Please Provide Name.
+                  </div>
+      
+                  <div class="valid-feedback">
+                    Looks good!
+                  </div>
+
                 </div>
 
                 <div class="form-group">
                   <label for="exampleInputName1">Last Name</label>
                   <input type="text" class="form-control" id="exampleInputName1" placeholder="Name" name = "last_name" required>
+
+                  <div class="invalid-feedback">
+                    Please Provide Last Name.
+                  </div>
+      
+                  <div class="valid-feedback">
+                    Looks good!
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="exampleInputName1">Username</label>
                   <input type="text" class="form-control" id="exampleInputName1" id = "username" placeholder="Name" name="username" required >
+
+                  <div class="invalid-feedback">
+                    Please Provide Username.
+                  </div>
+      
+                  <div class="valid-feedback">
+                    Looks good!
+                  </div>
                 </div>
 
                 <div class="form-group">
                   <label for="exampleInputEmail3">Email address</label>
                   <input type="email" class="form-control" id="exampleInputEmail3" placeholder="Email" name="email" required>
+
+                  <div class="invalid-feedback">
+                    Please Provide Email.
+                  </div>
+      
+                  <div class="valid-feedback">
+                    Looks good!
+                  </div>
+
                 </div>
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Membership</label>
@@ -110,26 +144,7 @@
                   </div>
                 </div>
 
-                <!-- <div class="form-group">
-                  <label for="exampleInputPassword4">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword4" placeholder="Password">
-                </div> -->
-                <!-- <div class="form-group">
-                  <label for="exampleSelectGender">Gender</label>
-                  <select class="form-control" id="exampleSelectGender">
-                    <option>Male</option>
-                    <option>Female</option>
-                  </select>
-                </div> -->
 
-                <!-- <div class="form-group">
-                  <label for="exampleInputCity1">City</label>
-                  <input type="text" class="form-control" id="exampleInputCity1" placeholder="Location">
-                </div>
-                <div class="form-group">
-                  <label for="exampleTextarea1">Textarea</label>
-                  <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
-                </div> -->
                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
                 
               </form>
@@ -143,45 +158,11 @@
     </div>
 {% endblock content %}
 
-<!-- <script>
-  $(document).ready(function(){
-    $("#username").keyup(function(){
-                var username = $(this).val();
-                
-                if(username!=""){
-                    $.ajax({
-                        url : '{% url 'check_username_exist' %}',
-                        type : 'POST',
-                        data : {username:username}
-                    })
-                    .done(function(response){
-                        //console.log(response);
 
-                        if(response == "True"){
-                            $(".username_error").remove();
-                            $("<span class='username_error' style='color: red; padding: 5px; font-weight: bold;'> Username Not Available. </span>").insertAfter("#id_username")
-                        }
-                        else{
-                            $(".username_error").remove();
-                            $("<span class='username_error' style='color: green; padding: 5px; font-weight: bold;'> Username Available. </span>").insertAfter("#id_username")
-                        }
-                    })
-
-                    .fail(function(){
-                        console.log("Failed");
-                    })
-                }
-                else{
-                    $(".username_error").remove();
-                }
-                
-            })
-
-  });
-</script> -->
 
 <!-- Specific Plugin JS goes HERE  -->
 {% block plugin_javascripts %}
+
 
   <script src="/static/assets/vendors/select2/select2.min.js"></script>
   <script src="/static/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
@@ -190,6 +171,33 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+
+<script>
+
+  
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+  (function () {
+    'use strict'
+  
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.needs-validation')
+  
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+  
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+  
+  </script>
+
 
   <script src="/static/assets/js/file-upload.js"></script>
   <script src="/static/assets/js/typeahead.js"></script>

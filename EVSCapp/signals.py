@@ -75,29 +75,19 @@ def send_notification(sender,instance,created,**kwargs):
             
 
 
-        path_to_fcm = "https://fcm.googleapis.com"
-        # server_key = 'AAAAPrW_CP8:APA91bEElY_DX6m7Kuwpo807REpKV67F9VgGCP_YLf2MZiAj4IBWqyowu_krDS42l50uq0b7vRTF-wtXjj7DBVk-orvVD_05szRH-24Uqh8k_eUdRNmu5mpcbBm6QzSgyHbotaGxt-eX'
-        # reg_id = TrafficPolice.objects.values_list('fcm_token',flat=True).get(user= 18)
-        # print(reg_id)
-        # message_title = 'Notification test'
-        # message_body = "Hi Aman, We made it bro!"
-        # result = FCMNotification(api_key=server_key).notify_single_device(registration_id=reg_id, message_title=message_title, message_body=message_body)
         notification = Notification.objects.create(recipient = nearby_traffic_police, records = instance, content = "message_body")
         notification.save()
 
         print(instance.vehicle.vehicle_plate)
-
+        # create instance of FCMNotification Class by providing API Key
         push_service = FCMNotification(api_key = 'AAAAbG5wAg0:APA91bH60qfGn4rg2B-2bSWicLWShygvmNrlrSX0LM9VzM9Srqcxvo3XIX9ODSrk92Zhuk4kPQ10V5DCRVVzDXN7koQSSP7S8aQhtRZQEULS10nL57k_Ote3AQzcolVRcuCnV8NgcGdw')
-        # registration_id = TrafficPolice.objects.values_list('fcm_token',flat=True).get(user= nearby_traffic_police.id)
+        #retrieve registration Id of Traffic Police from The database
         registration_id = nearby_traffic_police.fcm_token
         print(registration_id)
         message_title = 'Notification test'
         message_body = "Hi Aman, We made it bro!"
+        # sending Notification to Single Devices
         result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body) 
         print(result)
         
-# @receiver(post_save,sender = Report)
-# def notificatio(post_save, instance, created, **kwargs):
-#     if created:
-#         Notification.objects.create()
         

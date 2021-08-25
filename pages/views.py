@@ -40,6 +40,9 @@ def index(request):
     all_traffic_police_count=TrafficPolice.objects.all().count()
     all_system_admin_count=SystemAdmin.objects.all().count()
 
+    latest_records = Records.objects.all().order_by('created_at')[:5]
+    latest_reports = Report.objects.all().order_by('created_at')[:5]
+
 
 
     context={
@@ -47,8 +50,11 @@ def index(request):
         "all_record_count":all_record_count,
         "all_report_count":all_report_count,
         "all_traffic_police":all_traffic_police_count,
-        "all_sytem_admin_count":all_system_admin_count
+        "all_sytem_admin_count":all_system_admin_count,
+        "latest_records": latest_records,
+        "latest_reports": latest_reports,
     }
+    
     context['segment'] = 'index'
 
     html_template = loader.get_template( 'index.html' )
@@ -168,12 +174,13 @@ def edit_vehicle_save(request):
             vehicle.vehicle_owner=vehicle_owner
 
             vehicle.save()
+
             messages.success(request, "Vehicle updated successfully")
-            return redirect('/edit_vehicle/'+vehicle_id)
+            return redirect('edit_vehicle', vehicle_id = vehicle_id)
 
         except:
             messages.error(request, "Failed To update vehicle")
-            return redirect("/edit_vehicle/"+vehicle_id)   
+            return redirect("edit_vehicle" ,vehicle_id = vehicle_id)   
 
 def delete_vehicle(request,vehicle_id):
     vehicle=Vehicle.objects.get(id=vehicle_id)
@@ -482,7 +489,7 @@ def edit_traffic_police_save(request):
             traffic.location = traffic_police_sites
             print(traffic.location)
             traffic.save(update_fields=['phone_number','gender','location'])
-            messages.success(request, "Profile Updated successfully")
+            messages.success(request, "Traffic Police Data is successfully Updated !")
             # return redirect("edit_traffic_police", traffic_police_id = id )
             return redirect("manage_traffic_police")
 
