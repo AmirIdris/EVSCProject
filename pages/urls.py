@@ -38,7 +38,9 @@ from pages.views import (index,
                         report_view,
                         generate_password,
                         remove_traffic_location_assignment,
-                        generate_password_page
+                        generate_password_page,
+                        generate_traffic_police_credential,
+                        generate_traffic_police_credential_page
 
                         )
 
@@ -77,6 +79,8 @@ urlpatterns = [
     path('check_username_exist', check_username_exist, name = 'check_username_exist'),
     path('generate_credential_page', generate_password_page, name = 'generate_credential_page'),
     path('generate_credential', generate_password, name = 'generate_credential'),
+    path('generate_credential_by_email_page', generate_traffic_police_credential_page, name = 'generate_credential_by_email_page'),
+    path('generate_traffic_police_credential',generate_traffic_police_credential, name = 'generate_traffic_police_credential'),
     
     #record related urls
     path('view_records/',records_view, name = 'view_records'),

@@ -238,8 +238,7 @@ def add_user_save(request):
             user = User.objects.create(first_name = first_name, last_name = last_name, email = email, username = usernam, is_staff = True)
             user.set_password(password)
             user.save()
-
-            return redirect('manage_system_admin')
+            return redirect('generate_credential_page')
                          
                     
                 
@@ -332,6 +331,40 @@ def detail_info_view_save(request):
             return redirect("detail_info", traffic_id = id )
 def generate_password_page(request):
     return render(request, "generate_credential.html")
+
+def generate_traffic_police_credential_page(request):
+    return render(request, "generate_credential_by_email.html")
+
+def generate_traffic_police_credential(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = User.objects.make_random_password()
+
+        try: 
+            User.objects.filter(email = email).exists()
+            user = User.objects.get(email=email)
+            user.set_password(password)
+            user.save()
+            response = HttpResponse(content_type = 'application/pdf')
+            # This line force a download
+            response['Content-Disposition'] = 'attachment; filename="1.pdf"'
+            
+            get_email = user.email
+            p = canvas.Canvas(response)
+            # Write content on the PDF 
+            p.drawString(100, 500, "Password is:  " + password + " Username is : " + get_email ) 
+            # Close the PDF object.
+            p.showPage()
+            p.save()
+            return response
+        except:
+            return HttpResponse("Error")
+
+
+
+
+
+
             
 
 
@@ -520,6 +553,7 @@ def admin_profile_update(request):
         return redirect("admin_profile")
 
     else:
+        user_id = request.POST.get('id')
         username = request.POST.get('username')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
@@ -528,27 +562,26 @@ def admin_profile_update(request):
         gender = request.POST.get('gender')
         password = request.POST.get('password')
 
-        try:
-            user = User.objects.get(id = request.user.id)
-            user.username = username
-            user.first_name = first_name
-            user.last_name = last_name
-            user.email = email
-            if password != None and password != '':
-                user.set_password(password)
-            user.save()
+        # try:
+        user = User.objects.get(id = request.user.id)
+        
+        user.username = username
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        # if password != None and password != '':
+        #     user.set_password(password)
+        # user.save()
+        system_admin = SystemAdmin.objects.get(user_id = user)
+        system_admin.phone_number = phone_number
+        system_admin.gender = gender
+        system_admin.save(update_fields=['phone_number','gender'])
+        messages.success(request, "Profile Updated successfully")
+        return redirect("admin_profile")
 
-            system_admin = SystemAdmin.objects.get(user = request.user)
-            system_admin.phone_number = phone_number
-            system_admin.gender = gender
-            system_admin.save()
-
-            messages.success(request, "Profile Updated successfully")
-            return redirect("admin_profile")
-
-        except:
-            messages.error(request, "Failed to update Profile")
-            return redirect("admin_profile")
+        # except:
+        #     messages.error(request, "Failed to update Profile")
+        #     return redirect("admin_profile")
 
 
 
