@@ -170,7 +170,10 @@ class ListUserDetail(generics.RetrieveUpdateDestroyAPIView):
 class ListNotification(generics.ListAPIView):
     serializer_class=NotificationSerializer
     def get_queryset(self):
-        return Notification.objects.filter(Q(records__status = False))
+        user = self.request.user
+        
+        print(user)
+        return Notification.objects.filter(records__status = False,recipient__user=user)
 
         
 
