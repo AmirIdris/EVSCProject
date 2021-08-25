@@ -40,6 +40,9 @@ def index(request):
     all_traffic_police_count=TrafficPolice.objects.all().count()
     all_system_admin_count=SystemAdmin.objects.all().count()
 
+    latest_records = Records.objects.all().order_by('created_at')[:5]
+    latest_reports = Report.objects.all().order_by('created_at')[:5]
+
 
 
     context={
@@ -47,8 +50,11 @@ def index(request):
         "all_record_count":all_record_count,
         "all_report_count":all_report_count,
         "all_traffic_police":all_traffic_police_count,
-        "all_sytem_admin_count":all_system_admin_count
+        "all_sytem_admin_count":all_system_admin_count,
+        "latest_records": latest_records,
+        "latest_reports": latest_reports,
     }
+    
     context['segment'] = 'index'
 
     html_template = loader.get_template( 'index.html' )
