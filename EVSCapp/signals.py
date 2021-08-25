@@ -84,8 +84,9 @@ def send_notification(sender,instance,created,**kwargs):
         #retrieve registration Id of Traffic Police from The database
         registration_id = nearby_traffic_police.fcm_token
         print(registration_id)
-        message_title = 'Notification test'
-        message_body = "Hi Aman, We made it bro!"
+
+        message_body = "Vehicle with Plate Number: {plate_number} is Moving with speed {speed} km/s" .format(plate_number=instance.vehicle,speed=instance.vehicle_speed)
+        message_title = "New Notification!"
         # sending Notification to Single Devices
         result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body) 
         print(result)

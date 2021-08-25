@@ -37,7 +37,8 @@ from pages.views import (index,
                         check_username_exist,
                         report_view,
                         generate_password,
-                        remove_traffic_location_assignment
+                        remove_traffic_location_assignment,
+                        generate_password_page
 
                         )
 
@@ -74,6 +75,7 @@ urlpatterns = [
     path('add_user/',add_user, name = 'add_user'),
     path('add_user_save', add_user_save, name = 'add_user_save'),
     path('check_username_exist', check_username_exist, name = 'check_username_exist'),
+    path('generate_credential_page', generate_password_page, name = 'generate_credential_page'),
     path('generate_credential', generate_password, name = 'generate_credential'),
     
     #record related urls

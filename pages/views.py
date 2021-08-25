@@ -244,38 +244,10 @@ def add_user_save(request):
                     
                 
 
-            # if user.is_staff == True:
-            #     return redirect('admin')
-
-        # except:
-        #     messages.error(request, "Failed to add user")
         return render(request, 'user_registration_template.html')
 
 
-        # form = AddUserForm(request.POST)
-        # if form.is_valid():
-        #     email = form.cleaned_data['email']
-        #     password = form.cleaned_data['password']
-        #     username = form.cleaned_data['username']
-        #     password = form.cleaned_data['password']
-        #     first_name = form.cleaned_data['first_name']
-        #     last_name = form.cleaned_data['last_name']
 
-        #     try:
-        #         user = User.objects.create(email=email,password=password,username=username,first_name=first_name,last_name=last_name)
-        #         user.save()
-        #         messages.success(request, "student added successfully!")
-        #         return redirect("to")
-
-        #     except:
-        #         messages.error(request, "Failed to add student")
-        #         return redirect("to")
-
-        # else:
-        #     return redirect("to")
-
-
-        # return redirect("to")
 def detail_info_view(request,traffic_id):
     traffic = TrafficPolice.objects.get(id = traffic_id)
     locations = TrafficPoliceLocation.objects.all()
@@ -354,11 +326,12 @@ def detail_info_view_save(request):
             traffic.save(update_fields=['phone_number','gender','location'])
             messages.success(request, "Information is sent to the database successfully")
             # return redirect("edit_traffic_police", traffic_police_id = id )
-            return redirect("detail_info", traffic_id = id )
+            return redirect("generate_credential_page")
         except:
             messages.error(request,"Failed to store detail Information")
             return redirect("detail_info", traffic_id = id )
-
+def generate_password_page(request):
+    return render(request, "generate_credential.html")
             
 
 
