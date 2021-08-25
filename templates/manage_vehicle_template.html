@@ -17,37 +17,41 @@
 
 {% block content %}
 
-{% if messages %}
-<div class="form-group">
-<div class="col-12">
-    {% for message in messages %}
-    {% if message.tags == "error" %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
-        {{ message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        </div>
-    {% elif message.tags == "success" %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
-        {{ message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        </div>
-    {% endif %}
-    {% endfor %}
-</div>
-</div>
-{% endif %}
 
         <div class="row">
             <div class="col-md-12">
               <div class="card">
                 <a class="btn btn-primary" style="width: 50%; margin-top: 50px;" href="{% url 'add_vehicle' %}" role="button">+ Add Vehicles</a> <br/>&nbsp;
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title ">Simple Table</h4>
-                  <p class="card-category"> Here is a subtitle for this table</p>
+
+
+                  
+                        {% if messages %}
+                        <div class="form-group">
+                        <div class="col-12">
+                            {% for message in messages %}
+                            {% if message.tags == "error" %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            {% elif message.tags == "success" %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        </div>
+                        {% endif %}
+
+                  <h4 class="card-title ">Manage Locations</h4>
+                  <p class="card-category"> delete and Edit </p>
                 </div>
 
                 <form method="GET" class="form-group" style="width: 50%;" action="{% url 'search_vehicle' %} ">
@@ -83,7 +87,7 @@
                             <td>{{vehicle.vehicle_owner}}</td>
                             <td>
                               <a href="{% url 'edit_vehicle' vehicle.id %}" class="btn btn-success">Edit</a> 
-                              <a href="{% url 'delete_vehicle' vehicle.id %}" class="btn btn-danger confirm-delete" title="Delete" data-toggle="modal" data-target="#confirmDeleteModal" id="deleteButton{{vehicle.id}}">Delete</a>                              
+                              <a href="{% url 'delete_vehicle' vehicle.id %}" class="btn btn-danger confirm-delete"><i class="mdi mdi-delete"></i></a>                               
                             </td>
 
                         </tr>
