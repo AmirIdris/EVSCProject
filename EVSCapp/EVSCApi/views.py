@@ -249,13 +249,13 @@ class VehicleTrackerView(generics.ListCreateAPIView):
     #         return Records.objects.filter(status=False).order_by("-created_at")
 
     def perform_create(self, serializer):
-        record_id = serializer.data['record']
-        latitude = serializer.data['latitude']
-        longitude = serializer.data['longitude']
+        record_id = serializer.validated_data.get('records')
+        latitude = serializer.validated_data.get('latitude')
+        longitude = serializer.validated_data.get('longitude')
 
-        print(vehicle_plate)
+        print(record_id)
         print(latitude)
         record = Records.objects.get(pk = record_id)
-        print(vehicle)
+        print(record)
 
-        serializer.save(records = record, latitude = latitude,longitude = longitude)
+        serializer.save(records = record.id, latitude = latitude,longitude = longitude)

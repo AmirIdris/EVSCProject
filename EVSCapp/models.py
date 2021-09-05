@@ -91,6 +91,7 @@ class Notification(models.Model):
     recipient=models.ForeignKey(TrafficPolice,on_delete=models.CASCADE,related_name="traffic_police_notification")
     records=models.OneToOneField(Records,on_delete=models.CASCADE,related_name="record_notification")
     content=models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
     def __str__(self):

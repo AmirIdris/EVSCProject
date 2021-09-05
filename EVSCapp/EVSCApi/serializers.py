@@ -162,14 +162,14 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 class VehicleTrackerSerializer(serializers.Serializer):
     pk = serializers.ReadOnlyField()
-    record = serializers.CharField(max_length=15)
+    records = serializers.CharField(max_length=15)
     latitude = serializers.DecimalField(max_digits=9, decimal_places=6)
     longitude = serializers.DecimalField(max_digits=9, decimal_places=6)
 
 
     def create(self,validated_data):
         # vehicle = Vehicle.objects.filter(vehicle_plate__iexact = validated_data['vehicle'])
-        record = Records.objects.get(record = validated_data['record'])
+        record = Records.objects.get(id = validated_data['records'])
         obj=VehicleTracker.objects.create(records=record,latitude = validated_data['latitude'],longitude = validated_data['longitude'])
         return obj
 
