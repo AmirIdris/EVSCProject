@@ -13,7 +13,15 @@
 {% endblock plugin_stylesheets %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+    .card{
+    background-color: grey;
+  }
+
+</style>
+
+{% endblock stylesheets %}
 
 {% block content %}
 {% if messages %}
@@ -52,10 +60,10 @@
                     <table class="table">
                       <thead class=" text-primary">
                         <tr>
-                            <th>ID</th>
-                            <th>Plate Number</th>
-                            <th>Reported By</th>
-                            <th>Vehicle Owner</th>
+                            <th style="color: black;">ID</th>
+                            <th style="color: black;">Plate Number</th>
+                            <th style="color: black;">Reported By</th>
+                            <th style="color: black;">Vehicle Owner</th>
                         </tr>
                       </thead>
                       <tbody>

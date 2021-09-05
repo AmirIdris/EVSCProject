@@ -625,12 +625,13 @@ def search_all_traffic_police(request):
 def search_all_vehicle_records(request):
     if request.method == 'GET':
         plate = request.GET.get('search')
-        records = Records.objects.filter(Q(vehicle__vehicle_plate__iexact = plate))
-        if records.exists():
-            context = {
-                'records' : records 
-            }
-            return render(request, "view_records_template.html",context)
+        if plate != '':
+            records = Records.objects.filter(Q(vehicle__vehicle_plate__iexact = plate))
+            if records.exists():
+                context = {
+                        'records' : records 
+                    }
+                return render(request, "view_records_template.html",context)
 
         else:
             return render(request, "view_records_template.html",context = {})

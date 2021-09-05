@@ -32,7 +32,7 @@ class Records(models.Model):
     vehicle=models.ForeignKey(Vehicle,on_delete=models.CASCADE,related_name="records")
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6,null=True)
-    vehicle_speed=models.IntegerField(null=True)
+    vehicle_speed=models.CharField(max_length = 3,null=True)
     duration=models.TimeField(null = True)
     status=models.BooleanField("is_reported",default=False)
 
@@ -149,5 +149,16 @@ class SystemAdmin(models.Model):
     def __str__(self):
         """Unicode representation of SystemAdmin."""
         return str(self.user.username)
+
+
+class VehicleTracker(models.Model):
+    records=models.ForeignKey(Records,on_delete=models.CASCADE,related_name="record_tracking")
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+
+    def __str__(self):
+        return self.records
+    
+
 
 
