@@ -13,7 +13,22 @@
 {% endblock plugin_stylesheets %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+  .card{
+    background-color: grey;
+  }
+  .content-wrapper{
+    background-color: lightgrey;
+  }
+  .form-control, .asColorPicker-input, .dataTables_wrapper select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=text], .jsgrid .jsgrid-table .jsgrid-filter-row select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=number], .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .typeahead, .tt-query, .tt-hint
+  {
+    background-color: honeydew;
+    outline-color: honeydew;
+  }
+</style>
+
+{% endblock stylesheets %}
 
 {% block content %}
 <!-- <a class="btn btn-primary" style="width: 50%;" href="{% url 'add_vehicle' %}" role="button">+ Add Vehicles</a> <br/>&nbsp; -->
@@ -60,28 +75,26 @@
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="table">
-                      <thead class=" text-primary">
+                      <thead class="text">
                         <tr>
-                            <th>ID</th>
-                            <th>Plate Number</th>
-                            <th>Latitude</th>
-                            <th>Longitude</th>
-                            <th>Address</th>
-                            <th>Vehicle Speed</th>
-                            <th>Status</th>
-                            <th>Map View</th>
+                            <th style="color: black;">ID</th>
+                            <th style="color: black;">Plate Number</th>
+                            <th style="color: black;">Latitude</th>
+                            <th style="color: black;">Longitude</th>
+                            <th style="color: black;">Vehicle Speed</th>
+                            <th style="color: black;">Status</th>
+                            <th style="color: black;">Map View</th>
                         </tr>
                       </thead>
                       <tbody>
                         
                         {% for record in records %}
                         <tr>
-                            <td style="color: aliceblue;">{{record.id}}</td>
-                            <td style="color: aliceblue;">{{record.vehicle}}</td>
-                            <td style="color: aliceblue;">{{record.latitude}}</td>
-                            <td style="color: aliceblue;">{{record.longitude}}</td>
-                            <td style="color: aliceblue;">{{record.address}}</td>
-                            <td style="color: aliceblue;">{{record.vehicle_speed}}</td>
+                            <td style="color: white;">{{record.id}}</td>
+                            <td style="color: white;">{{record.vehicle}}</td>
+                            <td style="color: white;">{{record.latitude}}</td>
+                            <td style="color: white;">{{record.longitude}}</td>
+                            <td style="color: white;">{{record.vehicle_speed}}</td>
                             <td> 
                             
                            

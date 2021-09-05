@@ -13,7 +13,19 @@
 {% endblock plugin_stylesheets %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+  .card{
+    background-color: aliceblue;
+  }
+  .content-wrapper{
+    background-color: grey;
+  }
+
+</style>
+
+
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -32,10 +44,10 @@
         </nav>
       </div>
         <!--end of Registration Form-->
-<div class="col-12 grid-margin stretch-card mx-auto">
+<div class="col-12 grid-margin stretch-card">
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title">Basic User elements</h4>
+              <h4 class="card-title" style="color: rgb(37, 36, 36);">Basic User elements</h4>
               <p class="card-description"> Fill form elements </p>
               <form role="form" class="forms-sample needs-validation" method="POST", action="{% url 'add_user_save' %}" novalidate>
 
@@ -86,7 +98,7 @@
 
                 <div class="form-group">
                   <label for="exampleInputName1">Last Name</label>
-                  <input type="text" class="form-control" id="exampleInputName1" placeholder="Name" name = "last_name" required>
+                  <input type="text" class="form-control" id="exampleInputName1" placeholder="LName" name = "last_name" required>
 
                   <div class="invalid-feedback">
                     Please Provide Last Name.

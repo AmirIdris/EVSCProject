@@ -2,7 +2,7 @@
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from EVSCapp import models
-from EVSCapp.models import Notification, Report,Vehicle,TrafficPolice,Records
+from EVSCapp.models import Notification, Report,Vehicle,TrafficPolice,Records,VehicleTracker
 from django.conf import settings
 from django.db.models import fields
 from rest_auth.models import TokenModel
@@ -133,18 +133,18 @@ class UserSerializer(serializers.ModelSerializer):
         instance.last_name = validated_data.get('last_name',instance.last_name)
         instance.username = validated_data.get('username',instance.username)
         instance.username = validated_data.get('username',instance.username)
-        traffic_police = TrafficPolice.objects.get(user = instance)
-        print(traffic_police.phone_number)
+        # traffic_police = TrafficPolice.objects.get(user = instance)
+        # print(traffic_police.phone_number)
                 
         # instance.set_password(validated_data['password'])
         instance.save()
-        traffic_polices = validated_data.pop('traffic_police')
-        phone_number = list(traffic_polices.items())
-        traffic_police.phone_number = phone_number[0][1]
+        # traffic_polices = validated_data.pop('traffic_police')
+        # phone_number = list(traffic_polices.items())
+        # traffic_police.phone_number = phone_number[0][1]
 
-        traffic_police.save(update_fields=['phone_number'])
-        print(phone_number[0][1])
-        print(traffic_polices)       
+        # traffic_police.save(update_fields=['phone_number'])
+        # print(phone_number[0][1])
+        # print(traffic_polices)       
 
         return instance
 
@@ -159,3 +159,17 @@ class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required = True)
     new_password = serializers.CharField(required = True)
     
+
+class VehicleTrackerSerializer(serializers.Serializer):
+    pk = serializers.ReadOnlyField()
+    record = serializers.CharField(max_length=15)
+    latitude = serializers.DecimalField(max_digits=9, decimal_places=6)
+    longitude = serializers.DecimalField(max_digits=9, decimal_places=6)
+
+
+    def create(self,validated_data):
+        # vehicle = Vehicle.objects.filter(vehicle_plate__iexact = validated_data['vehicle'])
+        record = Records.objects.get(record = validated_data['record'])
+        obj=VehicleTracker.objects.create(records=record,latitude = validated_data['latitude'],longitude = validated_data['longitude'])
+        return obj
+

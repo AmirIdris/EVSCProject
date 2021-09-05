@@ -7,17 +7,15 @@ from EVSCapp.EVSCApi.views import (RecordDetailAPIView,
                                     ReportRUDAPIView,
                                     UpdateFcmTokenApiView, 
                                     ListFcmTokenDevices,
-                                    # fcm_token_detail
                                     ListReport,
                                     MyProfileLoadAPIView,
                                     ListUser,
                                     ListUserDetail,
                                     RecordViewSet,
-                                    # RecordList,
-                                    # list_records,
                                     ListNotification,
                                     RecordList,
-                                    ChangePasswordView
+                                    ChangePasswordView,
+                                    VehicleTrackerView
 
                                    
                                     )
@@ -30,15 +28,15 @@ from django.urls import reverse_lazy
 
 router=DefaultRouter()
 router.register("records",qv.RecordViewSet)
-# router.register('devices', FCMDeviceAuthorizedViewSet)
+
 
 
 urlpatterns = [
-    # path("",include(router.urls)),
+
     path("",include(router.urls)),
     path('rest-auth/',include("rest_auth.urls")),
     
-    # path('records/',list_records,name='list-rcords'),
+
     path('records/',RecordList.as_view(),name = 'list-records'),
     path('records/<int:pk>/',RecordDetailAPIView.as_view(),name='list-detail'),
     path("records/<int:pk>/report/", qv.ReportCreateAPiView.as_view(),name='create-report'),
@@ -53,11 +51,7 @@ urlpatterns = [
     path('users/<int:pk>',ListUserDetail.as_view(), name = 'user-detail'),
     path('change-password/',ChangePasswordView.as_view(),name = 'change-password'),
     path('notifications/',ListNotification.as_view(),name='notifications'),
-    # path('reset-password/',auth_views.PasswordResetView.as_view(success_url=reverse_lazy('password_reset_done')), name='reset_password'),
-    # path('reset_password_sent/',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done'),
-    # path('reset_password_complete/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
-    # path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(success_url=reverse_lazy('password_reset_complete')),name='password_reset_confirm')
-    # path('devices/<int:pk>',fcm_token_detail,name='create-device-token')
-    # path('records/<int:pk>/report',ReportCreateAPiView.as_view(),name='create-record')
+    path('track-vehicles/',VehicleTrackerView.as_view(),name = 'track-vehicles')
+
     
 ]

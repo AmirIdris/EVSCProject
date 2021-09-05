@@ -6,7 +6,7 @@ from numpy import record
 from numpy.core import records
 from rest_framework import response
 # from TrafficReport.api.serializes import ReportSerializer
-from EVSCapp.models import Notification, Report,TrafficPolice,Vehicle,Records
+from EVSCapp.models import Notification, Report,TrafficPolice,Vehicle,Records,VehicleTracker
 from rest_framework import generics, serializers,viewsets,status
 from rest_framework.generics import UpdateAPIView, get_object_or_404
 from rest_framework.views import APIView
@@ -17,7 +17,8 @@ from EVSCapp.EVSCApi.serializers import (ChangePasswordSerializer, VehicleSerial
                                           FcmDevicesSerializer,
                                           UserProfileSerializer,
                                           UserSerializer,
-                                          NotificationSerializer)
+                                          NotificationSerializer,
+                                          VehicleTrackerSerializer)
 
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
@@ -236,3 +237,25 @@ class ChangePasswordView(UpdateAPIView):
 
 
     
+class VehicleTrackerView(generics.ListCreateAPIView):
+    """Create Records"""
+    # retrive all records
+    queryset = VehicleTracker.objects.all()
+    # change the format to Json
+    serializer_class = VehicleTrackerSerializer
+
+    # def get_queryset(self):
+    #     if get_object_or_404(Records,status = True):
+    #         return Records.objects.filter(status=False).order_by("-created_at")
+
+    def perform_create(self, serializer):
+        record_id = serializer.data['record']
+        latitude = serializer.data['latitude']
+        longitude = serializer.data['longitude']
+
+        print(vehicle_plate)
+        print(latitude)
+        record = Records.objects.get(pk = record_id)
+        print(vehicle)
+
+        serializer.save(records = record, latitude = latitude,longitude = longitude)
