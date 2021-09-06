@@ -12,7 +12,8 @@ from rest_framework import serializers
 from rest_framework.fields import BooleanField, CharField, Field, IntegerField,ReadOnlyField,DecimalField
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
-
+from datetime import datetime, timedelta
+ 
 
 
 
@@ -162,14 +163,19 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 class VehicleTrackerSerializer(serializers.Serializer):
     pk = serializers.ReadOnlyField()
-    record = serializers.CharField(max_length=15)
+    records = serializers.CharField(max_length=15)
     latitude = serializers.DecimalField(max_digits=9, decimal_places=6)
     longitude = serializers.DecimalField(max_digits=9, decimal_places=6)
 
 
     def create(self,validated_data):
-        # vehicle = Vehicle.objects.filter(vehicle_plate__iexact = validated_data['vehicle'])
-        record = Records.objects.get(record = validated_data['record'])
+        record_id = validated_data['records']
+        print(record_id)        
+        vehicle = Vehicle.objects.get(vehicle_plate=record_id)
+        time_threshold = datetime.now() - timedelta(minutes=5)
+
+        record = Records.objects.filter(vehicle = vehicle,created_at__lt = time_threshold).first()
+        
         obj=VehicleTracker.objects.create(records=record,latitude = validated_data['latitude'],longitude = validated_data['longitude'])
         return obj
 

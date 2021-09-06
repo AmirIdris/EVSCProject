@@ -13,7 +13,25 @@
 {% endblock plugin_stylesheets %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+  .select2-container--default .select2-selection--single, .select2-container--default .select2-dropdown, .select2-container--default .select2-selection--multiple{
+    background-color: aliceblue;
+    /* background:rgb(95, 92, 92); */
+  }
+  .form-control:focus, .asColorPicker-input:focus, .dataTables_wrapper select:focus, .jsgrid .jsgrid-table .jsgrid-filter-row input:focus[type=text], .jsgrid .jsgrid-table .jsgrid-filter-row select:focus, .jsgrid .jsgrid-table .jsgrid-filter-row input:focus[type=number], .select2-container--default .select2-selection--single:focus, .select2-container--default .select2-selection--single .select2-search__field:focus, .typeahead:focus, .tt-query:focus, .tt-hint:focus{
+    background-color: aliceblue;
+    
+  }
+  .select2-container--default .select2-selection--single .select2-selection__rendered{
+    color: rgb(78, 75, 75);
+  }
+  .select2-container--default .select2-results__option--highlighted[aria-selected]{
+    color: rgb(78, 75, 75);
+  }
+
+</style>
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -33,7 +51,7 @@
         <div class="col-md-5 grid-margin stretch-card mx-auto" >
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title">Assign Location To Traffics</h4>
+              <h4 class="card-title" style="color: rgb(116, 110, 110);">Assign Location To Traffics</h4>
               <form action="{% url 'assign_location_to_traffic_save' %}" method="post" class="needs-validation" novalidate>
                 {% csrf_token %}
 
@@ -63,7 +81,7 @@
                   {% endif %}
 
               <div class="form-group">
-                <label>Select Traffic Polices</label>
+                <label style="color: rgb(116, 110, 110);">Select Traffic Polices</label>
                 <input type="hidden" name="id" value="{{none_assigned_traffic.id}}">
                 <select name="traffic" class="js-example-basic-single" style="width:100%" required >
                   {% for none_assigned_traffic in none_assigned_traffics %}
@@ -86,7 +104,7 @@
 
             <div class="card-body">
               <div class="form-group">
-                <label>Slect Location</label>
+                <label style="color: rgb(116, 110, 110);">Slect Location</label>
                 <select class="js-example-basic-single" style="width:100%" name="location" required>
                   
                   {% for free_location in free_locations %}

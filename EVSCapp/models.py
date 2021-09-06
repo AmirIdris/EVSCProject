@@ -13,6 +13,7 @@ class Vehicle(models.Model):
     vehicle_plate=models.CharField(max_length=11)
     vehicle_type=models.CharField(max_length=100)
     vehicle_owner=models.CharField(max_length=100)
+    status = models.BooleanField(default=True)
 
 
     # TODO: Define fields here
@@ -91,6 +92,7 @@ class Notification(models.Model):
     recipient=models.ForeignKey(TrafficPolice,on_delete=models.CASCADE,related_name="traffic_police_notification")
     records=models.OneToOneField(Records,on_delete=models.CASCADE,related_name="record_notification")
     content=models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
     def __str__(self):
@@ -157,7 +159,7 @@ class VehicleTracker(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
 
     def __str__(self):
-        return self.records
+        return str(self.records)
     
 
 

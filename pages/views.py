@@ -11,7 +11,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from .forms import CustomUserCreationForm, EditVehicleForm
-from EVSCapp.models import Vehicle,Records,Report,TrafficPolice,SystemAdmin,TrafficPoliceLocation
+from EVSCapp.models import Vehicle,Records,Report,TrafficPolice,SystemAdmin,TrafficPoliceLocation,VehicleTracker
 from django.views.decorators.csrf import csrf_exempt, csrf_protect,requires_csrf_token
 
 # from pages.forms import AddTrafficPoliceForm
@@ -587,7 +587,7 @@ def admin_profile_update(request):
 
 
 def records_view(request):
-    records=Records.objects.all()
+    records=Records.objects.all().order_by('-created_at')
     context = {
         'records':records
     }
@@ -656,8 +656,21 @@ def view_record_location_on_map(request, location_id):
 
     record = Records.objects.get(id = location_id)
     traffic_police_location = TrafficPoliceLocation.objects.all()
+    #retrive all available latitude and longitude of the records
+    locations = VehicleTracker.objects.filter(records=record)
+    location_lists = []
     record_latitude = record.latitude
     record_longitude = record.longitude
+
+    print(locations)
+
+
+        
+        
+
+
+
+
 
     map = folium.Map(location = [float(record_latitude), float(record_longitude)],zoom_start = 10)
 
@@ -678,11 +691,22 @@ def view_record_location_on_map(request, location_id):
 
     else:
         record_status = "Record is reported"
-    folium.Marker(location = [float(record_latitude),float(record_longitude)],
-    tooltip = 'click for more',
-    popup='Vehicle Plate is:'+ str(record.vehicle.vehicle_plate + "\n" + 'Vehicle speed is :' + str(record.vehicle_speed) + "\n" + "Report status: " + record_status),
-    icon = folium.Icon(color = 'red', icon = 'info-sign')
-    ).add_to(map)
+    # folium.Marker(location = [float(record_latitude),float(record_longitude)],
+    # tooltip = 'click for more',
+    # popup='Vehicle Plate is:'+ str(record.vehicle.vehicle_plate + "\n" + 'Vehicle speed is :' + str(record.vehicle_speed) + "\n" + "Report status: " + record_status),
+    # icon = folium.Icon(color = 'red', icon = 'info-sign')
+    # ).add_to(map)
+    # loc = [
+    #     (8.5629,39.2897),
+    #     (8.5409,39.2652)
+    # ]
+    if locations.exists():
+        for location in locations:
+            location_lists.append([location.latitude,location.longitude])
+
+        print(location_lists)
+
+        folium.PolyLine(location_lists,color = 'red', weight = 15, opacity = 0.8).add_to(map)
 
     
 
