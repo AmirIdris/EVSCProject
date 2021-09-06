@@ -25,7 +25,7 @@ class VehicleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=Vehicle
-        fields = "__all__"
+        fields = ('status','vehicle_plate')
 
 class RecordSerializer(serializers.Serializer):
     pk = serializers.ReadOnlyField()

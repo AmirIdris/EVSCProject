@@ -18,7 +18,8 @@ from EVSCapp.EVSCApi.serializers import (ChangePasswordSerializer, VehicleSerial
                                           UserProfileSerializer,
                                           UserSerializer,
                                           NotificationSerializer,
-                                          VehicleTrackerSerializer)
+                                          VehicleTrackerSerializer,
+                                          VehicleSerializer)
 
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
@@ -263,3 +264,30 @@ class VehicleTrackerView(generics.ListCreateAPIView):
 
         if record != None:
             serializer.save(records = record, latitude = latitude,longitude = longitude)
+
+class VehicleStatusUpdateView(generics.ListCreateAPIView):
+    queryset = Vehicle.objects.all()
+    serializer_class = VehicleSerializer
+
+
+    def get_object(self,queryset = None):
+        vehicle_plate = request.data['vehicle_plate'] 
+        obj = Vehicle.objects.get(vehicle_plate=vehicle_plate)
+        return obj
+
+
+    # def patch(self, request, **kwargs):
+    #     vehicle_plate = request.data['vehicle_plate'] 
+    #     print(vehicle_plate)
+    #     vehicle_object_status = Vehicle.objects.get(vehicle_plate=vehicle_plate)
+    #     print(vehicle_object_status)     
+    #     serializer=VehicleSerializer(vehicle_object_status,data = request.data, partial = True)
+
+
+
+    #     if serializer.is_valid():
+    #         serializer.save()
+
+    #         return Response("{'message':'instance is saved successfully'}")
+
+    #     return Response("{'message':'something wrong'}")
