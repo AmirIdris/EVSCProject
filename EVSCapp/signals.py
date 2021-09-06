@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
-from .models import TrafficPolice,SystemAdmin,Records,Notification,Report, TrafficPoliceLocation,VehicleTracker
+from .models import TrafficPolice,SystemAdmin,Records,Notification,Report, TrafficPoliceLocation,VehicleTracker,Vehicle
 from django.dispatch import receiver
 from pyfcm import FCMNotification
 
@@ -104,7 +104,11 @@ def send_notification_to_new_traffic(sender, instance, created, **kwargs):
         all_traffic_police_count =TrafficPolice.objects.all().count()
         traffic_police_location_count = TrafficPoliceLocation.objects.all().count()
 
-        if Records.objects.filter(records=instance.records,created_at = created_at,status=False).exists():
+        # vehicle = Vehicle.objects.get(vehicle_plate=instance.records)
+        record = Records.objects.get(id=instance.records.id)
+        print(record.status)
+
+        if record and record.status == True:
 
             # append all traffic police location to the list
             for traffic_police in all_traffic_police:
@@ -163,7 +167,8 @@ def send_notification_to_new_traffic(sender, instance, created, **kwargs):
                     # sending Notification to Single Devices
                     result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body) 
                     print(result)
-            
+        else:
+            print("Signal is not working")   
             
                             
     

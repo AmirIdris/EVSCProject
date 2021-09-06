@@ -13,6 +13,7 @@ class Vehicle(models.Model):
     vehicle_plate=models.CharField(max_length=11)
     vehicle_type=models.CharField(max_length=100)
     vehicle_owner=models.CharField(max_length=100)
+    status = models.BooleanField(default=True)
 
 
     # TODO: Define fields here
@@ -158,7 +159,7 @@ class VehicleTracker(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
 
     def __str__(self):
-        return self.records
+        return str(self.records)
     
 
 

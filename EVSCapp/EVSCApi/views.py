@@ -34,7 +34,7 @@ from django.db.models import Q
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 
-
+from datetime import datetime, timedelta
  
 
 # List Available records .
@@ -252,10 +252,14 @@ class VehicleTrackerView(generics.ListCreateAPIView):
         record_id = serializer.validated_data.get('records')
         latitude = serializer.validated_data.get('latitude')
         longitude = serializer.validated_data.get('longitude')
-
         print(record_id)
         print(latitude)
-        record = Records.objects.get(pk = record_id)
+        print(longitude)
+        
+        time_threshold = datetime.now() - timedelta(minutes=5)
+
+        record = Records.objects.get(id = record_id)
         print(record)
 
-        serializer.save(records = record.id, latitude = latitude,longitude = longitude)
+        if record != None:
+            serializer.save(records = record, latitude = latitude,longitude = longitude)
