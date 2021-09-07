@@ -8604,8 +8604,8 @@ pre {
   background-color: #000000; }
 
 .table-hover tbody tr:hover {
-  color: #212529;
-  background-color: #000000; }
+  color: #a1a5a8;
+  background-color: #dfdddd; }
 
 .table-primary,
 .table-primary > th,
@@ -16577,7 +16577,7 @@ code {
     .card .card-body + .card-body {
       padding-top: 1rem; }
   .card .card-title {
-    color: #ffffff;
+    color: #968f8f;
     margin-bottom: 1.125rem;
     text-transform: capitalize; }
   .card .card-subtitle {
@@ -16756,7 +16756,7 @@ code {
       border-color: #2c2e33; }
     .form-check .form-check-label input[type="checkbox"]:disabled:checked + .input-helper:after {
       background: #2c2e33;
-      color: #ffffff; }
+      color: #ffff; }
     .form-check .form-check-label input[type="radio"] + .input-helper:before {
       position: absolute;
       content: "";

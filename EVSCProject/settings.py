@@ -45,11 +45,17 @@ INSTALLED_APPS = [
     'corsheaders',
     'EVSCapp',
     'authentication',
-    'pages'
+    'pages',
+    'django_crontab'
 ]
 
 EMAIL_BACKEND ='django.core.mail.backends.console.EmailBackend'
 SITE_ID = 1
+
+CRONJOBS = [
+    ('*/1 * * * *', 'EVSCapp.cron.my_scheduled_job')
+]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

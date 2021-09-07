@@ -13,7 +13,41 @@
 {% endblock plugin_stylesheets %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+  .form-control, .asColorPicker-input, .dataTables_wrapper select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=text], .jsgrid .jsgrid-table .jsgrid-filter-row select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=number], .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .typeahead, .tt-query, .tt-hint{
+  background-color: aliceblue;
+  border: 1px solid #2c2c2c;
+
+}
+input[type = text]:focus{
+    background-color:aliceblue;
+  }
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: rgb(77, 75, 75);
+}
+.select2-container--default .select2-selection--single, .select2-container--default .select2-dropdown, .select2-container--default .select2-selection--multiple{
+  background-color: aliceblue;
+}
+.form-control, .asColorPicker-input, .dataTables_wrapper select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=text], .jsgrid .jsgrid-table .jsgrid-filter-row select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=number], .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .typeahead, .tt-query, .tt-hint{
+  background-color: aliceblue;
+}
+.select2-container--default .select2-selection--single, .select2-container--default .select2-dropdown, .select2-container--default .select2-selection--multiple{
+    background-color: aliceblue;
+    /* background:rgb(95, 92, 92); */
+  }
+  .form-control:focus, .asColorPicker-input:focus, .dataTables_wrapper select:focus, .jsgrid .jsgrid-table .jsgrid-filter-row input:focus[type=text], .jsgrid .jsgrid-table .jsgrid-filter-row select:focus, .jsgrid .jsgrid-table .jsgrid-filter-row input:focus[type=number], .select2-container--default .select2-selection--single:focus, .select2-container--default .select2-selection--single .select2-search__field:focus, .typeahead:focus, .tt-query:focus, .tt-hint:focus{
+    background-color: aliceblue;
+    
+  }
+  .select2-container--default .select2-selection--single .select2-selection__rendered{
+    color: rgb(78, 75, 75);
+  }
+  .select2-container--default .select2-results__option--highlighted[aria-selected]{
+    color: rgb(78, 75, 75);
+  }
+</style>
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -50,7 +84,7 @@
                         </div>
                         {% endif %}
 
-                  <h4 class="card-title ">Manage Locations</h4>
+                  <h4 class="card-title " style="color: rgb(119, 116, 116);">Manage Locations</h4>
                   <p class="card-category"> delete and Edit </p>
                 </div>
 
@@ -76,6 +110,7 @@
                             <th>Plate Number</th>
                             <th>Vehicle Type</th>
                             <th>Vehicle Owner</th>
+                            <th>Status</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -85,6 +120,18 @@
                             <td>{{vehicle.vehicle_plate}}</td>
                             <td>{{vehicle.vehicle_type}}</td>
                             <td>{{vehicle.vehicle_owner}}</td>
+                            <td style="color: honeydew;">
+            
+                              {% if vehicle.status == True %}
+                              <p class="text-success"> active <i class="mdi mdi-arrow-right"></i></p>
+                              {% else %}
+                              <p class="text-danger"> deactive <i class="mdi mdi-arrow-right"></i></p>
+                              {% endif %}
+                                
+                                
+                            </td>
+
+
                             <td>
                               <a href="{% url 'edit_vehicle' vehicle.id %}" class="btn btn-success">Edit</a> 
                               <a href="{% url 'delete_vehicle' vehicle.id %}" class="btn btn-danger confirm-delete"><i class="mdi mdi-delete"></i></a>                               
