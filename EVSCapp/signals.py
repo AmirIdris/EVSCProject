@@ -108,7 +108,7 @@ def send_notification_to_new_traffic(sender, instance, created, **kwargs):
         record = Records.objects.get(id=instance.records.id)
         print(record.status)
 
-        if record and record.status == True:
+        if record and record.status == False:
 
             # append all traffic police location to the list
             for traffic_police in all_traffic_police:

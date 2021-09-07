@@ -172,10 +172,10 @@ class VehicleTrackerSerializer(serializers.Serializer):
     def create(self,validated_data):
         record_id = validated_data['records']
         print(record_id)        
-        vehicle = Vehicle.objects.get(vehicle_plate=record_id)
-        time_threshold = datetime.now() - timedelta(minutes=5)
+        # # vehicle = Vehicle.objects.get(vehicle_plate=record_id)
+        # time_threshold = datetime.now() - timedelta(minutes=5)
 
-        record = Records.objects.filter(vehicle = vehicle,created_at__lt = time_threshold).first()
+        record = Records.objects.get(pk = record_id)
         
         obj=VehicleTracker.objects.create(records=record,latitude = validated_data['latitude'],longitude = validated_data['longitude'])
         return obj

@@ -256,14 +256,12 @@ class VehicleTrackerView(generics.ListCreateAPIView):
         print(record_id)
         print(latitude)
         print(longitude)
-        
-        time_threshold = datetime.now() - timedelta(minutes=5)
 
-        record = Records.objects.get(id = record_id)
+        record = Records.objects.get(pk = record_id)
         print(record)
 
         if record != None:
-            serializer.save(records = record, latitude = latitude,longitude = longitude)
+            serializer.save(records_id = record_id, latitude = latitude,longitude = longitude)
 
 # class VehicleStatusUpdateView(generics.ListCreateAPIView):
 #     queryset = Vehicle.objects.all()
