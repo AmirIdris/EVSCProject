@@ -16,15 +16,41 @@
 {% block stylesheets %}
 <style>
   .card{
-    background-color: grey;
+    background-color: aliceblue;
   }
   .content-wrapper{
-    background-color: lightgrey;
+    background-color: aliceblue;
   }
   .form-control, .asColorPicker-input, .dataTables_wrapper select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=text], .jsgrid .jsgrid-table .jsgrid-filter-row select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=number], .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .typeahead, .tt-query, .tt-hint
   {
     background-color: honeydew;
     outline-color: honeydew;
+  }
+  input[type = text]:focus{
+    background-color:aliceblue;
+  }
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: rgb(77, 75, 75);
+}
+.select2-container--default .select2-selection--single, .select2-container--default .select2-dropdown, .select2-container--default .select2-selection--multiple{
+  background-color: aliceblue;
+}
+.form-control, .asColorPicker-input, .dataTables_wrapper select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=text], .jsgrid .jsgrid-table .jsgrid-filter-row select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=number], .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .typeahead, .tt-query, .tt-hint{
+  background-color: aliceblue;
+}
+.select2-container--default .select2-selection--single, .select2-container--default .select2-dropdown, .select2-container--default .select2-selection--multiple{
+    background-color: aliceblue;
+    /* background:rgb(95, 92, 92); */
+  }
+  .form-control:focus, .asColorPicker-input:focus, .dataTables_wrapper select:focus, .jsgrid .jsgrid-table .jsgrid-filter-row input:focus[type=text], .jsgrid .jsgrid-table .jsgrid-filter-row select:focus, .jsgrid .jsgrid-table .jsgrid-filter-row input:focus[type=number], .select2-container--default .select2-selection--single:focus, .select2-container--default .select2-selection--single .select2-search__field:focus, .typeahead:focus, .tt-query:focus, .tt-hint:focus{
+    background-color: aliceblue;
+    
+  }
+  .select2-container--default .select2-selection--single .select2-selection__rendered{
+    color: rgb(78, 75, 75);
+  }
+  .select2-container--default .select2-results__option--highlighted[aria-selected]{
+    color: rgb(78, 75, 75);
   }
 </style>
 
@@ -90,11 +116,11 @@
                         
                         {% for record in records %}
                         <tr>
-                            <td style="color: white;">{{record.id}}</td>
-                            <td style="color: white;">{{record.vehicle}}</td>
-                            <td style="color: white;">{{record.latitude}}</td>
-                            <td style="color: white;">{{record.longitude}}</td>
-                            <td style="color: white;">{{record.vehicle_speed}}</td>
+                            <td style="color:rgb(71, 67, 67);">{{record.id}}</td>
+                            <td style="color:rgb(71, 67, 67);">{{record.vehicle}}</td>
+                            <td style="color:rgb(71, 67, 67);">{{record.latitude}}</td>
+                            <td style="color:rgb(71, 67, 67);">{{record.longitude}}</td>
+                            <td style="color:rgb(71, 67, 67);">{{record.vehicle_speed}}</td>
                             <td> 
                             
                            
