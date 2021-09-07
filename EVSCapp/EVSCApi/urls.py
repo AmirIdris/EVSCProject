@@ -16,7 +16,7 @@ from EVSCapp.EVSCApi.views import (RecordDetailAPIView,
                                     RecordList,
                                     ChangePasswordView,
                                     VehicleTrackerView,
-                                    VehicleStatusUpdateView
+                                    UpdateVehicleStatus
 
                                    
                                     )
@@ -53,7 +53,7 @@ urlpatterns = [
     path('change-password/',ChangePasswordView.as_view(),name = 'change-password'),
     path('notifications/',ListNotification.as_view(),name='notifications'),
     path('track-vehicles/',VehicleTrackerView.as_view(),name = 'track-vehicles'),
-    path('update-status/',VehicleStatusUpdateView.as_view(),name = 'update-status')
+    path('update-status/<slug:vehicle_plate>',UpdateVehicleStatus.as_view(),name = 'update-status')
 
     
 ]

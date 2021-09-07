@@ -36,7 +36,7 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 
 from datetime import datetime, timedelta
- 
+from rest_framework.parsers import JSONParser
 
 # List Available records .
 class ListRecordAPiView(viewsets.ModelViewSet):
@@ -265,15 +265,57 @@ class VehicleTrackerView(generics.ListCreateAPIView):
         if record != None:
             serializer.save(records = record, latitude = latitude,longitude = longitude)
 
-class VehicleStatusUpdateView(generics.ListCreateAPIView):
-    queryset = Vehicle.objects.all()
-    serializer_class = VehicleSerializer
+# class VehicleStatusUpdateView(generics.ListCreateAPIView):
+#     queryset = Vehicle.objects.all()
+#     serializer_class = VehicleSerializer
 
 
-    def get_object(self,queryset = None):
-        vehicle_plate = request.data['vehicle_plate'] 
-        obj = Vehicle.objects.get(vehicle_plate=vehicle_plate)
-        return obj
+#     def get_object(self,queryset = None):
+#         vehicle_plate = request.data['vehicle_plate'] 
+#         obj = Vehicle.objects.get(vehicle_plate=vehicle_plate)
+#         return obj
+
+
+
+# class UpdateVehicleStatus(APIView):
+#     def get_object(self,queryset = None):
+#         vehicle_plate = self.request.data.get("vehicle_plate")
+#         obj = Vehicle.objects.filter(vehicle_plate=vehicle_plate)
+#         return obj
+#     def update(self,request,*args,**kwargs):
+#         data = request.DATA
+#         vehicle_plate = request.data.get("vehicle_plate")
+#         qs = Vehicle.objects.filter(vehicle_plate=vehicle_plate)
+#         serializer = VehicleSerializer(qs, data=data, many=True, partial = True)
+
+#         if serializer.is_valid():
+#             serializer.save()
+
+#             return Response(serializer.data) 
+# 
+class UpdateVehicleStatus(generics.RetrieveUpdateAPIView):
+    queryset=Vehicle.objects.all()
+    lookup_field = "vehicle_plate"
+    serializer_class=VehicleSerializer
+
+    # def perform_create(self, serializer):
+    #     return serializer.save()    
+
+def update_status(request):
+     
+    vehicle = Vehicle.objects.all()
+
+    if request.method == 'GET':
+        serializer = VehicleSerializer(vehicle,many = True)
+        return JsonResponse(serializer.data)
+
+    if request.method == 'PUT':
+        data = JSONParser().parse(request)
+        serializer = VehicleSerializer(vehicle, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data)
+        return JsonResponse(serializer.errors, status=400)
 
 
     # def patch(self, request, **kwargs):

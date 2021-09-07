@@ -27,6 +27,7 @@ class VehicleSerializer(serializers.ModelSerializer):
         model=Vehicle
         fields = ('status','vehicle_plate')
 
+
 class RecordSerializer(serializers.Serializer):
     pk = serializers.ReadOnlyField()
     vehicle = serializers.CharField(max_length=15)
