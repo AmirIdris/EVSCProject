@@ -30,7 +30,7 @@ set_system_datetime() {
 }
 
 # Generate and commit files for each day from May 8, 2021, onwards
-start_date="2022-07-16"
+start_date=" 2023-03-30"
 end_date="2025-03-15"  # Current date
 
 # Track the number of new files created
